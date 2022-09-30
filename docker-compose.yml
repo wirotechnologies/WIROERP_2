@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  php81:
+    build:
+      context: .
+      target: app_php
+    image: php81/php:dev
+    restart: on-failure
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE:-UTC}
+      XDEBUG_CONFIG: remote_host=localhost
+      PHP_IDE_CONFIG: serverName=localhost
+    volumes:
+      - .:/app:rw,cached
+      - ./var:/app/var
+  nginx:
+    build:
+      context: .
+      target: app_nginx
+    image: nginx:dev
+    restart: on-failure
+    depends_on:
+      - php81
+    volumes:
+      - ./public:/app/public:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:rw
+
+volumes:
+  db-data:
+  var:
