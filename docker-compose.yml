@@ -7,6 +7,9 @@ services:
       target: app_php
     image: php81/php:dev
     restart: on-failure
+    networks:
+      NET_WIRO_SBX:
+          ipv4_address: 192.168.0.3
     environment:
       APP_ENV: dev
       APP_DEBUG: 1
@@ -16,17 +19,26 @@ services:
     volumes:
       - .:/app:rw,cached
       - ./var:/app/var
-  nginx:
+  payments:
     build:
       context: .
       target: app_nginx
     image: nginx:dev
     restart: on-failure
+    networks:
+      NET_WIRO_SBX:
+          ipv4_address: 192.168.0.4
     depends_on:
       - php81
     volumes:
       - ./public:/app/public:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:rw
+      - ./docker-config/nginx/conf.d:/etc/nginx/conf.d:rw
+    ports:
+      - 8090:80
+networks:
+    NET_WIRO_SBX:
+        name: wironet
+        external: true
 
 volumes:
   db-data:

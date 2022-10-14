@@ -33,9 +33,9 @@ RUN docker-php-source extract \
     && rm -rf /var/cache/apk/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY docker/php/php.ini $PHP_INI_DIR/conf.d/php.ini
-COPY docker/php/php-cli.ini $PHP_INI_DIR/conf.d/php-cli.ini
-COPY docker/php/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
+COPY docker-config/php/php.ini $PHP_INI_DIR/conf.d/php.ini
+COPY docker-config/php/php-cli.ini $PHP_INI_DIR/conf.d/php-cli.ini
+COPY docker-config/php/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 
 RUN mkdir -p ${WORKDIR}
 WORKDIR ${WORKDIR}
@@ -55,7 +55,7 @@ RUN set -eux \
 
 VOLUME ${WORKDIR}/var
 
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY docker-config/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
