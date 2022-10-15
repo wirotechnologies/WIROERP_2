@@ -1,0 +1,5 @@
+hello:
+    path: /v1/hello
+    controller: App\Controller\HelloController
+    methods: GET 
+ 

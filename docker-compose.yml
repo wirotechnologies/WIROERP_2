@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-  php81:
+  phpservice:
+    container_name: hello_php
     build:
       context: .
       target: app_php
     image: php81/php:dev
     restart: on-failure
     networks:
-      NET_WIRO_SBX:
-          ipv4_address: 192.168.0.3
+      - wironet
     environment:
       APP_ENV: dev
       APP_DEBUG: 1
@@ -19,26 +19,26 @@ services:
     volumes:
       - .:/app:rw,cached
       - ./var:/app/var
-  payments:
+  hello:
+    container_name: hello
     build:
       context: .
       target: app_nginx
     image: nginx:dev
     restart: on-failure
     networks:
-      NET_WIRO_SBX:
-          ipv4_address: 192.168.0.4
+      - wironet
     depends_on:
-      - php81
+      - phpservice
     volumes:
       - ./public:/app/public:ro
       - ./docker-config/nginx/conf.d:/etc/nginx/conf.d:rw
     ports:
-      - 8090:80
+      - 8093:80
 networks:
-    NET_WIRO_SBX:
-        name: wironet
+    wironet:
         external: true
+
 
 volumes:
   db-data:
