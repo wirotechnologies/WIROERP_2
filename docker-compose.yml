@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  phpservice:
-    container_name: hello_php
+  php_customer:
+    container_name: php_customer
     build:
       context: .
       target: app_php
@@ -19,8 +19,8 @@ services:
     volumes:
       - .:/app:rw,cached
       - ./var:/app/var
-  hello:
-    container_name: hello
+  nginx_customer:
+    container_name: nginx_customer
     build:
       context: .
       target: app_nginx
@@ -29,16 +29,15 @@ services:
     networks:
       - wironet
     depends_on:
-      - phpservice
+      - php_customer
     volumes:
       - ./public:/app/public:ro
       - ./docker-config/nginx/conf.d:/etc/nginx/conf.d:rw
     ports:
-      - 8093:80
+      - 8097:80
 networks:
     wironet:
         external: true
-
 
 volumes:
   db-data:
