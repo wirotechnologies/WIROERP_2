@@ -157,7 +157,7 @@ class CustomersController extends AbstractController
             $entityManager->persist($customerAddress);  
         } 
 
-        $phoneNumbers = $dataJson['phoneNumbers'] ? $dataJson['phoneNumbers']:Null;
+        $phoneNumbers = isset($dataJson['phoneNumbers']) ? $dataJson['phoneNumbers']:Null;
         $customerAddressForCountry = $this->customerAddressRepository->findOneByCustomer($customer);
         $nameCountry = $customerAddressForCountry->getCities()->getStates()->getCountries()->getName();
         $country = $this->countryRepository->findByName($nameCountry);
@@ -193,26 +193,23 @@ class CustomersController extends AbstractController
         }    
   
         $references = $dataJson['references'] ? $dataJson['references']:Null;
-        $newCustomerReference = Null;
+        
         
         if(!is_null($references)){
             $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
             foreach($references as $reference){
+                $newCustomerReference = Null;
                 foreach($customerReferences as $customerReference){
                     if(($customerReference->getFullName()==$reference['fullName']) and ($customerReference->getPhoneNumber()==$reference['contactPhone'])){
                         $newCustomerReference = $customerReference;
-                        break 1;
+                        continue 1;
                     }
-                }   
-            dd($reference);     
+                }     
             if($newCustomerReference == Null){
-               dd("hola"); 
                 $newCustomerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
                 $entityManager->persist($newCustomerReference);
             }  
             }
-            dd("2 break");
-            
         }
 
         $entityManager->flush();  
