@@ -166,6 +166,7 @@ class CustomersController extends AbstractController
         if(!is_null($phoneNumbers)){
             foreach ($phoneNumbers as $phoneNumber){
                 $number = $this->phoneRepository->findById($phoneNumber, $countryPhoneCode);
+                
                 if(is_null($number)){
                     $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
                     $entityManager->persist($number);
@@ -175,11 +176,10 @@ class CustomersController extends AbstractController
                 }
                 else{
                     $newCustomerPhone = Null;
+                    
                     $customerPhones =  $this->customerPhoneRepository->findByCustomer($customer);
-                 // AQUIIIII !!!!!
-                    dd($customerPhones);
                     foreach($customerPhones as $customerPhone){
-                        if($customerPhone->getPhonesNumber()->getPhoneNumber()==$number){
+                        if($customerPhone->getPhonesNumber()==$number){
                             $newCustomerPhone = $customerPhone;
                             break;
                         }
@@ -194,20 +194,25 @@ class CustomersController extends AbstractController
   
         $references = $dataJson['references'] ? $dataJson['references']:Null;
         $newCustomerReference = Null;
+        
         if(!is_null($references)){
             $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
             foreach($references as $reference){
                 foreach($customerReferences as $customerReference){
-                    if(($customerReference->getFullName()==$reference['fullName']) and ($customerReference->getReferencesContactPhone()==$reference['contactPhone'])){
+                    if(($customerReference->getFullName()==$reference['fullName']) and ($customerReference->getPhoneNumber()==$reference['contactPhone'])){
                         $newCustomerReference = $customerReference;
-                        break;
+                        break 1;
                     }
-                }    
-                if($newCustomerReference == Null){
-                    $newCustomerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
-                    $entityManager->persist($newCustomerReference);
-                }  
+                }   
+            dd($reference);     
+            if($newCustomerReference == Null){
+               dd("hola"); 
+                $newCustomerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
+                $entityManager->persist($newCustomerReference);
+            }  
             }
+            dd("2 break");
+            
         }
 
         $entityManager->flush();  
