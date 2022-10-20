@@ -56,7 +56,7 @@ class CustomersRepository extends ServiceEntityRepository
         
         $date = new \DateTime();
         $customer->setCreatedDate($date);
-        $customer->setUpdateDate($date);
+        $customer->setUpdatedDate($date);
 
         $customer->setEmail($email);
 

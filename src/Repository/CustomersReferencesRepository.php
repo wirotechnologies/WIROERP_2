@@ -53,7 +53,7 @@ class CustomersReferencesRepository extends ServiceEntityRepository
         $customerReference->setCustomers($customer);
         $customerReference->setReferencesIdentifierTypes($identifierTypeReference);
         $customerReference->setFullName($fullNameReference);
-        $customerReference->setReferencesContactPhone($phoneReference);
+        $customerReference->setPhoneNumber($phoneReference);
         $customerReference->setReferencesCountriesPhoneCode($countryPhoneCode);
         $customerReference->setCreatedDate($date);
         

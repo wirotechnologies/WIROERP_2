@@ -42,15 +42,24 @@ class PhonesNumbersRepository extends ServiceEntityRepository
         }
     }
 
+    public function findById($phoneNumber, $countryPhoneCode): ?PhonesNumbers
+    {
+       return $this->createQueryBuilder('p')
+           ->join('p.countriesPhoneCode', 'pc')
+           ->andWhere('p.phoneNumber = :phoneNumber')
+           ->andWhere('pc.id = :countryPhoneCode')
+           ->setParameter('phoneNumber', $phoneNumber)
+           ->setParameter('countryPhoneCode', $countryPhoneCode->getId())
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+    }
+
     public function create($phoneNumber, $countryPhoneCode) :?PhonesNumbers
     {
         $number = new PhonesNumbers();
-        $date = new \DateTime();
-        $number->setPhoneNumber($phoneNumber);
-        $number->setCountriesPhoneCode($countryPhoneCode);
-        $number->setCreatedDate($date);    
+        $number->setPrimaryKeys($phoneNumber, $countryPhoneCode);
         return $number;
-        
     }
 
 //    /**

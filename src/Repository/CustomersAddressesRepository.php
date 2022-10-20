@@ -58,7 +58,7 @@ class CustomersAddressesRepository extends ServiceEntityRepository
         $customerAddress->setLine1($line1);
         $customerAddress->setLine2($line2);
         $customerAddress->setZipcode($zipcode);
-        $customerAddress->setSocieconomicStatus($socioeconomicStatus);
+        $customerAddress->setSocioeconomicStatus($socioeconomicStatus);
         $customerAddress->setNote($note);
         $customerAddress->setCreatedDate($date);
         return $customerAddress;

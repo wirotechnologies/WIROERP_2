@@ -23,19 +23,19 @@ class CustomersReferences
 
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"IdentifierTypes")]
-    #[ORM\JoinColumn(name:"references_identifier_type_id", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"identifier_types_id", referencedColumnName:"id")]
     private ?IdentifierTypes $referencesIdentifierTypes;
 
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"CountriesPhoneCode")]
-    #[ORM\JoinColumn(name:"references_countries_phone_code_id", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
     private ?CountriesPhoneCode $referencesCountriesPhoneCode;
 
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $fullName = null;
 
-    #[ORM\Column(name:"references_contact_phone", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
-    private ?string $referencesContactPhone;
+    #[ORM\Column(name:"phone_number", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
+    private ?string $phoneNumber;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
@@ -53,18 +53,6 @@ class CustomersReferences
     public function setFullName(?string $fullName): self
     {
         $this->fullName = $fullName;
-
-        return $this;
-    }
-
-    public function getReferencesContactPhone(): ?string
-    {
-        return $this->referencesContactPhone;
-    }
-
-    public function setReferencesContactPhone(?string $referencesContactPhone): self
-    {
-        $this->referencesContactPhone = $referencesContactPhone;
 
         return $this;
     }
@@ -117,4 +105,23 @@ class CustomersReferences
         return $this;
     }
 
+    /**
+     * Get the value of phoneNumber
+     */ 
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * Set the value of phoneNumber
+     *
+     * @return  self
+     */ 
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
 }

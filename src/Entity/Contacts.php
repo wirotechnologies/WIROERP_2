@@ -37,7 +37,7 @@ class Contacts
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updateDate = null;
+    private ?\DateTimeInterface $updatedDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
@@ -117,18 +117,6 @@ class Contacts
         return $this;
     }
 
-    public function getUpdateDate(): ?\DateTimeInterface
-    {
-        return $this->updateDate;
-    }
-
-    public function setUpdateDate(?\DateTimeInterface $updateDate): self
-    {
-        $this->updateDate = $updateDate;
-
-        return $this;
-    }
-
     public function getCreatedDate(): ?\DateTimeInterface
     {
         return $this->createdDate;
@@ -149,6 +137,26 @@ class Contacts
     public function setIdentifierTypes(?IdentifierTypes $identifierTypes): self
     {
         $this->identifierTypes = $identifierTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of updatedDate
+     */ 
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * Set the value of updatedDate
+     *
+     * @return  self
+     */ 
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
 
         return $this;
     }

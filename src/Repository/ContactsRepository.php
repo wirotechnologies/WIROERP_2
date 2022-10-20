@@ -64,7 +64,7 @@ class ContactsRepository extends ServiceEntityRepository
         $contact->setSecondLastName($secondLastNameContact);
         $contact->setEmail($emailContact);
         $date = new \DateTime();
-        $contact->setUpdateDate($date);
+        $contact->setUpdatedDate($date);
         $contact->setCreatedDate($date); 
         return $contact; 
         

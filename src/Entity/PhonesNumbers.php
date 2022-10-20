@@ -15,29 +15,21 @@ class PhonesNumbers
     #[ORM\Column(name:"phone_number", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
     private ?string $phoneNumber;
     
+    #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"CountriesPhoneCode")]
     #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
     private ?CountriesPhoneCode $countriesPhoneCode;
-    
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $createdDate = null;
 
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function getCreatedDate(): ?\DateTimeInterface
+    public function setPrimaryKeys(string $phoneNumber, CountriesPhoneCode $countriesPhoneCode)
     {
-        return $this->createdDate;
-    }
-
-    public function setCreatedDate(?\DateTimeInterface $createdDate): self
-    {
-        $this->createdDate = $createdDate;
-
-        return $this;
+        $this->setPhoneNumber($phoneNumber);
+        $this-> setCountriesPhoneCode($countriesPhoneCode);
     }
 
     public function getCountriesPhoneCode(): ?CountriesPhoneCode
@@ -51,9 +43,6 @@ class PhonesNumbers
 
         return $this;
     }
-
-
- 
 
     /**
      * Set the value of phoneNumber

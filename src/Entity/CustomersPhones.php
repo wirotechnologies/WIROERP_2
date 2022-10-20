@@ -16,12 +16,8 @@ class CustomersPhones
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"PhonesNumbers")]
     #[ORM\JoinColumn(name:"phones_numbers_phone_number", referencedColumnName:"phone_number")]
+    #[ORM\JoinColumn(name:"phones_numbers_countries_phone_code_id", referencedColumnName:"countries_phone_code_id")]
     private ?PhonesNumbers $phonesNumber;
-
-    #[ORM\GeneratedValue(strategy:"NONE")]
-    #[ORM\ManyToOne(targetEntity:"CountriesPhoneCode")]
-    #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
-    private ?CountriesPhoneCode $countriesPhoneCode;
 
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Customers")]
@@ -58,18 +54,25 @@ class CustomersPhones
         return $this;
     }
 
-    public function getCountriesPhoneCode(): ?CountriesPhoneCode
+    /**
+     * Get the value of id
+     */ 
+    public function getId()
     {
-        return $this->countriesPhoneCode;
+        return $this->id;
     }
 
-    public function setCountriesPhoneCode(?CountriesPhoneCode $countriesPhoneCode): self
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
     {
-        $this->countriesPhoneCode = $countriesPhoneCode;
+        $this->id = $id;
 
         return $this;
     }
-
 
     /**
      * Get the value of phonesNumber
@@ -87,26 +90,6 @@ class CustomersPhones
     public function setPhonesNumber($phonesNumber)
     {
         $this->phonesNumber = $phonesNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */ 
-    public function setId($id)
-    {
-        $this->id = $id;
 
         return $this;
     }

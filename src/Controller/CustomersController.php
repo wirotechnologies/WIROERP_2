@@ -86,12 +86,12 @@ class CustomersController extends AbstractController
         $countryPhoneCode = $this->countryPhoneRepository->findOneByCountry($country);
 
         foreach ($phoneNumbers as $phoneNumber){
-            $number = $this->phoneRepository->find($phoneNumber);
+            $number = $this->phoneRepository->findById($phoneNumber, $countryPhoneCode);
             if(is_null($number)){
                 $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
                 $entityManager->persist($number);
             }
-            $customerPhone = $this->customerPhoneRepository->create($number, $countryPhoneCode, $customer);
+            $customerPhone = $this->customerPhoneRepository->create($number, $customer);
             $entityManager->persist($customerPhone);
         }
             

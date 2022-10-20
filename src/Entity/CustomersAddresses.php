@@ -42,8 +42,8 @@ class CustomersAddresses
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
     private ?string $zipcode ;
 
-    #[ORM\Column(type: Types::DECIMAL, nullable: true)]
-    private ?int $socieconomicStatus;
+    #[ORM\Column(type: Types::DECIMAL, precision: 2, scale: '0', nullable: true)]
+    private ?int $socioeconomicStatus;
 
      /**
      * @var string
@@ -99,18 +99,6 @@ class CustomersAddresses
         return $this;
     }
 
-    public function getSocieconomicStatus(): ?string
-    {
-        return $this->socieconomicStatus;
-    }
-
-    public function setSocieconomicStatus(?string $socieconomicStatus): self
-    {
-        $this->socieconomicStatus = $socieconomicStatus;
-
-        return $this;
-    }
-
     public function getNote(): ?string
     {
         return $this->note;
@@ -159,6 +147,23 @@ class CustomersAddresses
         return $this;
     }
 
-   
-   
+    /**
+     * Get the value of socioeconomicStatus
+     */ 
+    public function getSocioeconomicStatus()
+    {
+        return $this->socioeconomicStatus;
+    }
+
+    /**
+     * Set the value of socioeconomicStatus
+     *
+     * @return  self
+     */ 
+    public function setSocioeconomicStatus($socioeconomicStatus)
+    {
+        $this->socioeconomicStatus = $socioeconomicStatus;
+
+        return $this;
+    }
 }
