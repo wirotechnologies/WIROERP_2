@@ -42,14 +42,13 @@ class CustomersAddressesRepository extends ServiceEntityRepository
 
     public function create($dataJson, $customer): ?CustomersAddresses
     {
-        $address = $dataJson['address'] ?? throw new BadRequestHttpException('400', null, 400);
-        $nameCity = $address['city'] ?? throw new BadRequestHttpException('400', null, 400);
-        $city = new Cities();
+        $address = $dataJson['address'];
+        $nameCity = $address['city'];
         $city = $this->cityRepository->findByName($nameCity);
-        $line1 = $address['line1'] ?? throw new BadRequestHttpException('400', null, 400);
+        $line1 = $address['line1'];
         $line2 = isset($address['line2']) ? $address['line2']:Null;
         $zipcode = isset($address['zipCode']) ? $address['zipCode']:Null;
-        $socioeconomicStatus =  $address['socioeconomicStatus'] ?? throw new BadRequestHttpException('400', null, 400);
+        $socioeconomicStatus =  $address['socioeconomicStatus'];
         $note = isset($address['note']) ? $address['note']:Null;
         $date = new \DateTime();
         $customerAddress = new CustomersAddresses();
@@ -66,15 +65,15 @@ class CustomersAddressesRepository extends ServiceEntityRepository
 
     public function update($dataJson, $customerAddress): ?CustomersAddresses
     {
-        $address = $dataJson['address'] ?? throw new BadRequestHttpException('400', null, 400);
-        $nameCity = $address['city'] ?? throw new BadRequestHttpException('400', null, 400);
-        $line1 = $address['line1'] ?? throw new BadRequestHttpException('400', null, 400);
-        $socioeconomicStatus =  $address['socioeconomicStatus'] ?? throw new BadRequestHttpException('400', null, 400);
-        $cityCustomer = $this->cityRepository->findByName($nameCity);
+        $address = $dataJson['address'];
+
+        $nameCity = isset($address['city']) ? $address['city']:Null;
         if (!is_null($nameCity)){
+            $cityCustomer = $this->cityRepository->findByName($nameCity);
             $customerAddress->setCities($cityCustomer);
         }
 
+        $line1 = isset($address['line1']) ? $address['line1']:Null;
         if (!is_null($line1)){
             $customerAddress->setLine1($line1);
         }
@@ -89,15 +88,15 @@ class CustomersAddressesRepository extends ServiceEntityRepository
             $customerAddress->setZipcode($zipcode);
         }
 
+        $socioeconomicStatus =  isset($address['socioeconomicStatus']) ? $address['socioeconomicStatus']:Null;
         if (!is_null($socioeconomicStatus)){
-            $customerAddress->setSocieconomicStatus($socioeconomicStatus);
+            $customerAddress->setSocioeconomicStatus($socioeconomicStatus);
         }
             
         $note = isset($dataJson['address']['note']) ? $dataJson['address']['note']:Null;
         if (!is_null($note)){
             $customerAddress->setNote($note);
         }
-
         return $customerAddress;
     }
 

@@ -87,7 +87,7 @@ class CustomersRepository extends ServiceEntityRepository
         if (!is_null($email)){   
             $customer->setEmail($email);
             $date = new \DateTime();
-            $customer->setUpdateDate($date);  
+            $customer->setUpdatedDate($date);  
         }
 
         if($custType->getId() == 2 ){
@@ -95,7 +95,7 @@ class CustomersRepository extends ServiceEntityRepository
             if (!is_null($comercialName)){
                 $customer->setComercialName($comercialName);
                 $date = new \DateTime();
-                $customer->setUpdateDate($date);
+                $customer->setUpdatedDate($date);
             }
         }
 
@@ -108,22 +108,22 @@ class CustomersRepository extends ServiceEntityRepository
             if (!is_null($firstName)){
                 $customer->setFirstName($firstName);
                 $date = new \DateTime();
-                $customer->setUpdateDate($date);
+                $customer->setUpdatedDate($date);
             }
             if (!is_null($middleName)){
                 $customer->setMiddleName($middleName);
                 $date = new \DateTime();
-                $customer->setUpdateDate($date);
+                $customer->setUpdatedDate($date);
             } 
             if (!is_null($lastName)){
                 $customer->setLastName($lastName);
                 $date = new \DateTime();
-                $customer->setUpdateDate($date);
+                $customer->setUpdatedDate($date);
             }
             if (!is_null($secondLastName)){
                 $customer->setSecondLastName($secondLastName);
                 $date = new \DateTime();
-                $customer->setUpdateDate($date);
+                $customer->setUpdatedDate($date);
             }
         }    
         return $customer;

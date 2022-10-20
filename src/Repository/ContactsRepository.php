@@ -44,17 +44,15 @@ class ContactsRepository extends ServiceEntityRepository
 
     public function create($dataJson ): ?Contacts
     {
-        
-        $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
-        $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
-        $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
-        $firstNameContact = $mainContact['firstName'] ?? throw new BadRequestHttpException('400', null, 400);;
+        $mainContact = $dataJson['mainContact'];
+        $contactId = $mainContact['identification']['value'];
+        $identTypeContact = $mainContact['identification']['idIdentifierType'];
+        $firstNameContact = $mainContact['firstName'];
         $middleNameContact = isset($mainContact['middleName']) ? $mainContact['middleName']: Null;
-        $lastNameContact = $mainContact['lastName'] ?? throw new BadRequestHttpException('400', null, 400);
+        $lastNameContact = $mainContact['lastName'];
         $secondLastNameContact = isset($mainContact['secondLastName']) ? $mainContact['secondLastName']:Null; 
-        $emailContact =  $mainContact['email'] ?? throw new BadRequestHttpException('400', null, 400);
-    
-        $identifierTypeContact = new IdentifierTypes();
+        $emailContact =  $mainContact['email'];
+
         $identifierTypeContact = $this->identifierRepository->find($identTypeContact);
         $contact = new Contacts();
         $contact->setPrimaryKeys($contactId,$identifierTypeContact);
@@ -67,51 +65,48 @@ class ContactsRepository extends ServiceEntityRepository
         $contact->setUpdatedDate($date);
         $contact->setCreatedDate($date); 
         return $contact; 
-        
     }
 
     public function update($dataJson, $contact): ?Contacts
     {
-        
-        $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
-        $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
-        $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
-        $firstNameContact = $mainContact['firstName'] ?? throw new BadRequestHttpException('400', null, 400);;
+        $mainContact = $dataJson['mainContact'];
+        $contactId = $mainContact['identification']['value'];
+        $identTypeContact = $mainContact['identification']['idIdentifierType'];
+        $firstNameContact = isset($mainContact['firstName']) ? $mainContact['firstName']:Null ;
         $middleNameContact = isset($mainContact['middleName']) ? $mainContact['middleName']: Null;
-        $lastNameContact = $mainContact['lastName'] ?? throw new BadRequestHttpException('400', null, 400);
+        $lastNameContact = isset($mainContact['lastName']) ? $mainContact['lastName']:Null;
         $secondLastNameContact = isset($mainContact['secondLastName']) ? $mainContact['secondLastName']:Null; 
-        $emailContact =  $mainContact['email'] ?? throw new BadRequestHttpException('400', null, 400);
+        $emailContact =  isset($mainContact['email']) ? $mainContact['email']:Null; 
 
         if (!is_null($firstNameContact)){
             $contact->setFirstName($firstNameContact);
             $date = new \DateTime();
-            $contact->setUpdateDate($date);
+            $contact->setUpdatedDate($date);
             }
                     
         if (!is_null($middleNameContact)){
             $contact->setMiddleName($middleNameContact);
             $date = new \DateTime();
-            $contact->setUpdateDate($date);
+            $contact->setUpdatedDate($date);
         }
 
         if (!is_null($lastNameContact)){
             $date = new \DateTime();
-            $contact->setUpdateDate($date);
+            $contact->setUpdatedDate($date);
             $contact->setLastName($lastNameContact);
         }    
 
         if (!is_null($secondLastNameContact)){
             $date = new \DateTime();
-            $contact->setUpdateDate($date);
+            $contact->setUpdatedDate($date);
             $contact->setSecondLastName($secondLastNameContact);
         }
                     
         if (!is_null($emailContact)){
             $date = new \DateTime();
-            $contact->setUpdateDate($date);
+            $contact->setUpdatedDate($date);
             $contact->setEmail($emailContact);
         } 
-        
         return($contact); 
     }
 

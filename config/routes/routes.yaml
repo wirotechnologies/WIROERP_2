@@ -4,12 +4,12 @@ hello:
     methods: GET 
 
 create_customers:
-    path:       /v1/customers
+    path: /v1/customers
     controller: App\Controller\CustomersController::create
     methods:    POST    
 
-# update_customers:
-#     path: api/v1/customers
-#     # the controller value has the format 'controller_class::method_name' 
-#     controller: App\Controller\CustomersController::update
-#     methods:    PUT  
+update_customers:
+    path: /v1/customers
+    # the controller value has the format 'controller_class::method_name' 
+    controller: App\Controller\CustomersController::update
+    methods:    PUT  
