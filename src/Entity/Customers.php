@@ -111,6 +111,7 @@ class Customers
             'lastName'=>$this->lastName,
             'secondLastName'=>$this->secondLastName,
             'email'=>$this->email,
+            'status'=>$this->status,
             'phoneNumber'=>$phoneNumberArray,
             'address'=>$addressArray,
             'references'=>$referencesArray
