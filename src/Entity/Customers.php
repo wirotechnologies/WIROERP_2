@@ -45,9 +45,6 @@ class Customers
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type:Types::BOOLEAN, nullable:true)]
-    private ?bool $status = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedDate = null;
 
@@ -59,7 +56,6 @@ class Customers
        
         if($customerContacts == []){
             $contactsArray = Null;
-            dd('hola');
         }
         else{
             $contactsArray = [];
@@ -111,7 +107,6 @@ class Customers
             'lastName'=>$this->lastName,
             'secondLastName'=>$this->secondLastName,
             'email'=>$this->email,
-            'status'=>$this->status,
             'phoneNumber'=>$phoneNumberArray,
             'address'=>$addressArray,
             'references'=>$referencesArray
@@ -138,7 +133,8 @@ class Customers
             'secondLastName'=>$this->secondLastName,
             'email'=>$this->email,
             'phoneNumber'=>$phoneNumberArray,
-            'status'=>$this->status
+            'balance'=>'balance',
+            'status'=>'ACTIVO'
         ];
         return $information;      
     }
@@ -289,23 +285,4 @@ class Customers
         return $this;
     }
 
-    /**
-     * Get the value of status
-     */ 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set the value of status
-     *
-     * @return  self
-     */ 
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
 }
