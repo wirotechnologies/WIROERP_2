@@ -68,4 +68,16 @@ class RequestValidator
 
         return 'OK';
     }
+
+    public function validateRequestRetrieveCustomers($request)
+    {
+        $rows = $request->query->get('rows') ?? throw new BadRequestHttpException('400', null, 400);
+        $initialRow = $request->query->get('initialRow') ?? throw new BadRequestHttpException('400', null, 400);
+        $initialRow = $initialRow-1;
+        if($initialRow < 0){
+            throw new BadRequestHttpException('400', null, 400);
+        }
+
+        return 'OK';
+    }
 }

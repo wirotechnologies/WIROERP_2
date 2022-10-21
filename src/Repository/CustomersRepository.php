@@ -182,6 +182,102 @@ class CustomersRepository extends ServiceEntityRepository
            ->getResult()
        ;
    }
+//    public function findCustomers($dataJson)
+//    {
+//         $expresion = isset($dataJson['expression']) ? $dataJson['expression']:Null;
+
+//         $rows = $dataJson['rows'] ?? throw new BadRequestHttpException('400', null, 400);
+      
+//         $initialRow = $dataJson['initialRow'] ?? throw new BadRequestHttpException('400', null, 400);
+//         $initialRow = $initialRow-1;
+//         if($initialRow < 0){
+//             throw new BadRequestHttpException('400', null, 400);
+//         }
+
+//         if(is_null($expresion)){
+//             $customers = $this->findCustomersByRows($rows, $initialRow);
+//         }
+//         else{
+//             $expresion = strtolower($expresion.'%');
+//             $customers = $this->findByExpresion($expresion, $rows, $initialRow);       
+//         }
+//         return $customers;
+//    }
+
+
+
+//    public function findCustomersByRows($row, $initialRow)
+//    {
+//     return $this->createQueryBuilder('c')
+//            ->orderBy('c.id', 'ASC')
+//            ->setMaxResults($row)
+//            ->setFirstResult($initialRow)
+          
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findByExpresion(string $expresion, $row, $initialRow)
+//    {
+//     return $this->createQueryBuilder('c')
+           
+//            ->Where('LOWER(c.comercialName) LIKE :expresion')
+//            ->OrWhere('LOWER(c.firstName) LIKE :expresion')
+//            ->setParameter('expresion', $expresion)
+//            ->orderBy('c.id', 'ASC')
+//            ->setMaxResults($row)
+//            ->setFirstResult($initialRow)
+          
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+   public function findCustomers($request)
+   {
+        $expresion = $request->query->get('expresion') !== (null || '""') ? $request->query->get('expresion'):Null;
+        $rows = $request->query->get('rows');
+        $initialRow = $request->query->get('initialRow');
+        $initialRow = $initialRow-1;
+        
+        if(is_null($expresion) || $expresion ==""){
+            $customers = $this->findByRows($rows, $initialRow);
+        }
+        else{
+            $expresion = strtolower($expresion.'%');
+            $customers = $this->findByExpresion($expresion, $rows, $initialRow);       
+        }
+        return $customers;
+   }
+
+   public function findByRows($row, $initialRow)
+   {
+    return $this->createQueryBuilder('c')
+           ->orderBy('c.id', 'ASC')
+           ->setMaxResults($row)
+           ->setFirstResult($initialRow)
+          
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+   public function findByExpresion(string $expresion, $row, $initialRow)
+   {
+    return $this->createQueryBuilder('c')
+           
+           ->Where('LOWER(c.comercialName) LIKE :expresion')
+           ->OrWhere('LOWER(c.firstName) LIKE :expresion')
+           ->setParameter('expresion', $expresion)
+           ->orderBy('c.id', 'ASC')
+           ->setMaxResults($row)
+           ->setFirstResult($initialRow)
+          
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    /**
 //     * @return Customers[] Returns an array of Customers objects

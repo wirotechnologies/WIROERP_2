@@ -68,19 +68,24 @@ class CustomersPhonesRepository extends ServiceEntityRepository
        ;
    }
 
-    public function findOneByCustomer($customer): ?CustomersPhones
+    /**
+    * @return CustomersPhones[] Returns an array of 1  CustomersPhones objects
+    */
+    public function findOneByCustomer($customer) 
     {
         return $this->createQueryBuilder('pp')
-         ->join('cp.customers', 'c')
+         ->join('pp.customers', 'c')
          ->andWhere('c.id = :id')
          ->andWhere('c.customerTypes = :customerTypes')
          ->andWhere('c.identifierTypes = :identifierTypes')
          ->setParameter('id',  $customer->getId())
          ->setParameter('customerTypes', $customer->getCustomerTypes())
          ->setParameter('identifierTypes', $customer->getIdentifierTypes())
+         ->setMaxResults(1)
          ->getQuery()
-         ->getOneOrNullResult()
+         ->getResult()
         ;
+
     }
 
 //    /**

@@ -13,3 +13,14 @@ update_customers:
     # the controller value has the format 'controller_class::method_name' 
     controller: App\Controller\CustomersController::update
     methods:    PUT  
+
+retrieve_customers:
+    path: /v1/retrieveCustomers
+    controller: App\Controller\retrieveCustomersController::retrieveListCustomers
+    methods:    GET  
+
+get_customers:
+    path: /api/v1/customers/retrievelist
+    # the controller value has the format 'controller_class::method_name' 
+    controller: App\Controller\retrieveCustomersController::getCustomers
+    methods:    GET    

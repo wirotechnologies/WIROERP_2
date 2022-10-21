@@ -20,7 +20,7 @@ class Cities
     private ?States $states;
 
     #[ORM\Column(length: 128, nullable: true)]
-    private ?string $name = null;
+    public ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;

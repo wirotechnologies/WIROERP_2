@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-//use App\Repository\CustomersRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CustomersRepository::class)]
 class Customers
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\Column(name:"id", type:"string", nullable:false)]
@@ -50,6 +50,28 @@ class Customers
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
+
+    public function getAll($customerPhones)
+    {
+        $phoneNumberArray = [];
+        foreach($customerPhones as $customerPhone){
+            array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
+        }
+        
+        $information = [
+            'id'=> $this->id,
+            'customerTypes'=> $this->customerTypes->getId(),
+            'identifierTypes'=> $this->identifierTypes->getId(),
+            'comercialName'=> $this->comercialName,
+            'firstName'=>$this->firstName,
+            'middleName'=>$this->middleName,
+            'lastName'=>$this->lastName,
+            'secondLastName'=>$this->secondLastName,
+            'phoneNumber'=>$phoneNumberArray,
+            'email'=>$this->email,
+        ];
+        return $information;      
+    }
 
     public function getId(): ?string
     {

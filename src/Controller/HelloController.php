@@ -22,7 +22,8 @@ class HelloController extends AbstractController
     public function __invoke(Request $request, LoggerInterface $logger): Response
     {
         $this->logger->info("ENTRO");
-        return new JsonResponse("",Response::HTTP_OK);
+        $array = [1,2,3];
+        return new JsonResponse(json_encode($array),Response::HTTP_OK);
     }
 
 }
