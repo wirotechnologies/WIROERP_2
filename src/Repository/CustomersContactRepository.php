@@ -68,6 +68,21 @@ class CustomersContactRepository extends ServiceEntityRepository
        ;
    }
 
+   public function findByCustomer($customer)
+   {
+       return $this->createQueryBuilder('cc')
+        ->join('cc.customers', 'c')
+        ->andWhere('c.id = :id')
+        ->andWhere('c.customerTypes = :customerTypes')
+        ->andWhere('c.identifierTypes = :identifierTypes')
+        ->setParameter('id',  $customer->getId())
+        ->setParameter('customerTypes', $customer->getCustomerTypes())
+        ->setParameter('identifierTypes', $customer->getIdentifierTypes())
+        ->getQuery()
+        ->getResult()
+       ;
+   }
+
 //    /**
 //     * @return CustomersContact[] Returns an array of CustomersContact objects
 //     */

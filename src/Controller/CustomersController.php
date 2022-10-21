@@ -62,7 +62,6 @@ class CustomersController extends AbstractController
         if(!is_null($customer)){
             throw new BadRequestHttpException('400 Customer already exist', null, 400);
         }
-
         $customer = $this->customersRepository->create($customerId, $customerType, $customerIdentifierType, $dataJson);
         $entityManager->persist($customer);
 
@@ -120,7 +119,7 @@ class CustomersController extends AbstractController
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         $dataJson = json_decode($request->getContent(), true);
-        $requestValidator = $this->requestValidatorService->validateRequestUpdateCustomer($dataJson);
+        $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson);
         $customerId=  $dataJson['identification']["value"];
         $customerType=  $dataJson['customerType'];
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];

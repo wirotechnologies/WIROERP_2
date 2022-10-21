@@ -45,19 +45,87 @@ class Customers
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $email = null;
 
+    #[ORM\Column(type:Types::BOOLEAN, nullable:true)]
+    private ?bool $status = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    public function getAll($customerPhones)
+    public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts)
+    {
+       
+        if($customerContacts == []){
+            $contactsArray = Null;
+            dd('hola');
+        }
+        else{
+            $contactsArray = [];
+            $identificationContact = [];
+            foreach($customerContacts as $customerContact){
+                $contentIdentificationContact = ['value'=>$customerContact->getContacts()->getId(), 'idIdentifierType'=>$customerContact->getContacts()->getIdentifierTypes()->getId()];
+                array_push($identificationContact,$contentIdentificationContact);
+            $contentContact = [
+                'firstName'=>$customerContact->getContacts()->getFirstName(),
+                'middleName'=>$customerContact->getContacts()->getMiddleName(),
+                'lastName'=>$customerContact->getContacts()->getLastName(),
+                'secondLastName'=>$customerContact->getContacts()->getSecondLastName(),
+                'email'=>$customerContact->getContacts()->getEmail(),
+                'identification'=>$identificationContact,
+
+            ];
+            array_push($contactsArray,$contentContact);
+            }
+        }
+        
+        $phoneNumberArray = [];
+        foreach($customerPhones as $customerPhone){
+            array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
+        }
+
+        $referencesArray = [];
+        foreach($customerReferences as $customerReference){
+            $contentReference = ['fullName'=>$customerReference->getFullName(),'type'=> $customerReference->getReferencesIdentifierTypes()->getId(), 'contactPhone'=>$customerReference->getPhoneNumber()];
+            array_push($referencesArray,$contentReference);
+        }
+
+        $addressArray = [
+            'line1'=>$customerAddress->getLine1(),
+            'line2'=>$customerAddress->getLine2(),
+            'zipcode'=>$customerAddress->getZipcode(),
+            'note'=>$customerAddress->getNote(),
+            'city'=>$customerAddress->getCities()->getName(),
+            'socioeconomicStatus'=>$customerAddress->getSocioeconomicStatus()
+        ];
+            
+        $information = [
+            'id'=> $this->id,
+            'customerTypes'=> $this->customerTypes->getId(),
+            'identifierTypes'=> $this->identifierTypes->getId(),
+            'comercialName'=> $this->comercialName,
+            'mainContact'=>$contactsArray,
+            'firstName'=>$this->firstName,
+            'middleName'=>$this->middleName,
+            'lastName'=>$this->lastName,
+            'secondLastName'=>$this->secondLastName,
+            'email'=>$this->email,
+            'phoneNumber'=>$phoneNumberArray,
+            'address'=>$addressArray,
+            'references'=>$referencesArray
+        ];  
+
+        return $information;      
+    }
+
+    public function getAllByRetrieve($customerPhones)
     {
         $phoneNumberArray = [];
         foreach($customerPhones as $customerPhone){
             array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
         }
-        
+
         $information = [
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),
@@ -67,8 +135,9 @@ class Customers
             'middleName'=>$this->middleName,
             'lastName'=>$this->lastName,
             'secondLastName'=>$this->secondLastName,
-            'phoneNumber'=>$phoneNumberArray,
             'email'=>$this->email,
+            'phoneNumber'=>$phoneNumberArray,
+            'status'=>$this->status
         ];
         return $information;      
     }
@@ -215,6 +284,26 @@ class Customers
     public function setUpdatedDate($updatedDate)
     {
         $this->updatedDate = $updatedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }

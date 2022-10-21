@@ -32,12 +32,12 @@ class retrieveCustomersController extends AbstractController
         $this->logger->info(json_last_error_msg());
         $rows = count($customers);
         $jsonResponse = [];
-        
+        $customerAddress = Null;
         foreach ($customers as  $customer) {
             $customerPhones = $this->customerPhoneRepository->findByCustomer($customer);
-            array_push($jsonResponse,  $customer->getAll($customerPhones));
+            array_push($jsonResponse,  $customer->getAllByRetrieve($customerPhones));
         }
-
+        
         $response = new JsonResponse();
         $response->setContent(json_encode(['customers' => $jsonResponse, 'rows' => $rows]));
         return $response;

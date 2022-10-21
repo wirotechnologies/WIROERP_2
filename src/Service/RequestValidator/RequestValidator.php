@@ -16,6 +16,7 @@ class RequestValidator
         $customerType=  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
         $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
+        $status = $dataJson['status'] ?? throw new BadRequestHttpException('400', null, 400);
         if($customerType == 2){
             $comercialName = $dataJson['comercialName'] ?? throw new BadRequestHttpException('400', null, 400);
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
@@ -80,4 +81,5 @@ class RequestValidator
 
         return 'OK';
     }
+
 }

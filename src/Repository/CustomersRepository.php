@@ -48,7 +48,7 @@ class CustomersRepository extends ServiceEntityRepository
     {
 
         $email = $dataJson['email'];
-
+        $status = $dataJson['status'];
         $customer = new Customers();
         $identifierType = $this->identifierRepository->find($customerIdentifierType);
         $customerType = $this->customerTRepository->find($customerTypeId);
@@ -59,7 +59,7 @@ class CustomersRepository extends ServiceEntityRepository
         $customer->setUpdatedDate($date);
 
         $customer->setEmail($email);
-
+        $customer->setStatus($status);
         if ($customerTypeId == 2){
             $comercialName = $dataJson['comercialName'];
             $customer->setComercialName($comercialName);

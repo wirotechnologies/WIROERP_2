@@ -19,8 +19,10 @@ retrieve_customers:
     controller: App\Controller\retrieveCustomersController::retrieveListCustomers
     methods:    GET  
 
-get_customers:
-    path: /api/v1/customers/retrievelist
+get_customer:
+    path: v1/customer/{customerTypeId}/{identificationTypeId}/{identificationvalue}
     # the controller value has the format 'controller_class::method_name' 
-    controller: App\Controller\retrieveCustomersController::getCustomers
+    controller: App\Controller\GetCustomerByIdsController::getCustomerByIds
     methods:    GET    
+
+    
