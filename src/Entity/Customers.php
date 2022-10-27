@@ -133,7 +133,7 @@ class Customers
             'secondLastName'=>$this->secondLastName,
             'email'=>$this->email,
             'phoneNumber'=>$phoneNumberArray,
-            'balance'=>'balance',
+            'balance'=> 0,
             'status'=>'ACTIVO'
         ];
         return $information;      

@@ -144,14 +144,16 @@ class CustomersRepository extends ServiceEntityRepository
     }
 
 
-   public function findOneById($id): ?Customers
+   public function findComercial($comercialName)
    {
-       return $this->createQueryBuilder('c')
-           ->andWhere('c.id = :id')
-           ->setParameter('id', $id)
-           ->getQuery()
-           ->getOneOrNullResult()
+        $qb = $this->createQueryBuilder('c')
+           ->andWhere('c.comercialName = :comercialName')
+           ->setParameter('comercialName', $comercialName)
+        //    ->getQuery()
+        //    ->getResult()
         ;
+        
+        return $qb->getQuery();
    }
    
    /**

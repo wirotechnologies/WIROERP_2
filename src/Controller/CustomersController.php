@@ -53,9 +53,15 @@ class CustomersController extends AbstractController
         $entityManager = $doctrine->getManager();
         $dataJson = json_decode($request->getContent(), true);
         $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson);
+        $this->logger->info("Request validated successfully");
         $customerId = $dataJson['identification']["value"];
         $customerType = $dataJson['customerType'];
         $customerIdentifierType = $dataJson['identification']['idIdentifierType'];
+        
+        
+        // $customer = $this->customersRepository->findComercial('consured');
+        // dd($customer->getSQL(), $customer->getParameters());
+        // $customer->getResult();
         
         $customer = $this->customersRepository->findById($customerId,$customerType,$customerIdentifierType);
         
