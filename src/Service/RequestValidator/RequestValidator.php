@@ -18,7 +18,8 @@ class RequestValidator
         //dd($dataJson);
         $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice') ?? throw new BadRequestHttpException('400 File Energy Invoice not upload', null, 400);
         $uploadFileIdentificationDocument = $request->files->get('identificationDocument') ?? throw new BadRequestHttpException('400 File Identification Document not upload', null, 400);
-        $customerId =  $dataJson['identification']["value"] ?? throw new BadRequestHttpException('400', null, 400);
+        $customerId =  $dataJson['identification']["value"];
+        // ?? throw new BadRequestHttpException('400', null, 400);
         $customerType =  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
         $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
