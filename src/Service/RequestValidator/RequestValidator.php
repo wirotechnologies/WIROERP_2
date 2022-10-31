@@ -3,6 +3,7 @@
 namespace App\Service\RequestValidator;
 use App\Repository\ContactsRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpFoundation\Request;
 class RequestValidator
 {
     public function __construct(
@@ -10,14 +11,20 @@ class RequestValidator
     )
     {
     }
-    public function validateRequestCreateCustomer($dataJson)
+    public function validateRequestCreateCustomer($dataJson, Request $request)
     {
-        $customerId=  $dataJson['identification']["value"] ?? throw new BadRequestHttpException('400', null, 400);
-        $customerType=  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
+
+        //$dataJson = json_decode($request->get('request'), true);
+        //dd($dataJson);
+        $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice') ?? throw new BadRequestHttpException('400 File Energy Invoice not upload', null, 400);
+        $uploadFileIdentificationDocument = $request->files->get('identificationDocument') ?? throw new BadRequestHttpException('400 File Identification Document not upload', null, 400);
+        $customerId =  $dataJson['identification']["value"] ?? throw new BadRequestHttpException('400', null, 400);
+        $customerType =  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
         $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
         
         if($customerType == 2){
+            $uploadFileIdentificationDocument = $request->files->get('fileCamaraComercio') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
             $comercialName = $dataJson['comercialName'] ?? throw new BadRequestHttpException('400', null, 400);
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);

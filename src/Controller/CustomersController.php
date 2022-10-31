@@ -15,6 +15,8 @@ use App\Repository\CountriesRepository;
 use App\Repository\CountriesPhoneCodeRepository;
 use App\Repository\CitiesRepository;
 use App\Repository\StatesRepository;
+use App\Repository\CustomersFilesRepository;
+use App\Service\Files\UploadFiles;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +44,8 @@ class CustomersController extends AbstractController
         private PhonesNumbersRepository $phoneRepository,
         private CustomersPhonesRepository $customerPhoneRepository,
         private CustomersReferencesRepository $customerReferencesRepository,
+        private CustomersFilesRepository $customerFilesRepository,
+        private UploadFiles $uploadFilesService,
         private EntityManagerInterface $entityManager
         )
         {}
@@ -51,8 +55,9 @@ class CustomersController extends AbstractController
         $this->logger = $logger;
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
-        $dataJson = json_decode($request->getContent(), true);
-        $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson);
+        //$dataJson = json_decode($request->getContent(), true);
+        $dataJson = json_decode($request->get('request'), true);
+        $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson, $request);
         $this->logger->info("Request validated successfully");
         $customerId = $dataJson['identification']["value"];
         $customerType = $dataJson['customerType'];
@@ -106,6 +111,28 @@ class CustomersController extends AbstractController
         foreach($references as $reference){
             $customerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
             $entityManager->persist($customerReference);
+        }
+
+        $destination = $this->getParameter('customers_uploads');
+        
+        $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice');
+        $newFilenameEnergyInvoice = $this->uploadFilesService->upload($uploadFileEnergyInvoice, $destination);
+        $uploadedFileEnergyInvoice = $this->customerFilesRepository->create($newFilenameEnergyInvoice, $customer);
+        $uploadedFileEnergyInvoice->setDocumentationType('Factura de Energía');
+        $entityManager->persist($uploadedFileEnergyInvoice); 
+
+        $uploadFileIdentificationDocument = $request->files->get('identificationDocument');
+        $newFilenameIdentificationDocument = $this->uploadFilesService->upload($uploadFileIdentificationDocument, $destination);
+        $uploadedFileIdentificationDocument = $this->customerFilesRepository->create($newFilenameIdentificationDocument, $customer);
+        $uploadedFileIdentificationDocument->setDocumentationType('Documento de Identificación');
+        $entityManager->persist($uploadedFileIdentificationDocument); 
+
+        if($customerType == 2){
+            $uploadFileCamaraComercio = $request->files->get('fileCamaraComercio');
+            $newFilenameCamaraComercio = $this->uploadFilesService->upload($uploadFileCamaraComercio, $destination);
+            $uploadedFileCamaraComercio = $this->customerFilesRepository->create($newFilenameCamaraComercio, $customer);
+            $uploadedFileCamaraComercio->setDocumentationType('Cámara de Comercio');
+            $entityManager->persist($uploadedFileCamaraComercio);
         }
 
         $entityManager->flush(); 
