@@ -55,25 +55,22 @@ class CustomersController extends AbstractController
         $this->logger = $logger;
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
-        //$dataJson = json_decode($request->getContent(), true);
         $dataJson = json_decode($request->get('request'), true);
-        
+        $customerId =  $dataJson['identification']["value"] ?? throw new BadRequestHttpException('400', null, 400);
+        $customerType =  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
+        $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
+        $customer = $this->customersRepository->findById($customerId, $customerType, $customerIdentifierType);
+        if($customer){
+            $this->logger->error("Conflicto: El cliente ya existe");
+            $response = new JsonResponse();
+            $response->setContent('El cliente ya existe');
+            $response->setStatusCode(409);
+            return $response;
+        }
+
         $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson, $request);
         $this->logger->info("Request validated successfully");
-        $customerId = $dataJson['identification']["value"];
-        $customerType = $dataJson['customerType'];
-        $customerIdentifierType = $dataJson['identification']['idIdentifierType'];
-        
-        
-        // $customer = $this->customersRepository->findComercial('consured');
-        // dd($customer->getSQL(), $customer->getParameters());
-        // $customer->getResult();
-        
-        $customer = $this->customersRepository->findById($customerId,$customerType,$customerIdentifierType);
-        
-        if(!is_null($customer)){
-            throw new BadRequestHttpException('400 Customer already exist', null, 400);
-        }
+
         $customer = $this->customersRepository->create($customerId, $customerType, $customerIdentifierType, $dataJson);
         $entityManager->persist($customer);
 

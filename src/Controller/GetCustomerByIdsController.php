@@ -33,20 +33,18 @@ class GetCustomerByIdsController extends AbstractController
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
-        //$requestValidator = $this->requestValidatorService->validateRequestGetCustomerByIds($request); 
         $customer = $this->customersRepository->findById($identificationvalue,  $customerTypeId,  $identificationTypeId);
-        if(is_null($customer)){
-            throw new BadRequestHttpException('400 Customer not found', null, 400);
+        if(!$customer){
+            $response = new JsonResponse();
+            $response->setContent('Cliente no encontrado');
+            $response->setStatusCode(404);
+            return $response;
         }
         $customerContacts = $this->customerContactRepository->findByCustomer($customer);
         $customerPhones = $this->customerPhoneRepository->findByCustomer($customer);
         $customerAddress = $this->customerAddressRepository->findOneByCustomer($customer);
         $customerReferences = $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
         $jsonResponse = [$customer->getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts)];
-        
-        //$customerPhones = $this->customerPhoneRepository->findByCustomer($customer);
-        //array_push($jsonResponse,  $customer->getAll($customerPhones));
-    
 
         $response = new JsonResponse();
         $response->setContent(json_encode(['customer' => $jsonResponse]));
