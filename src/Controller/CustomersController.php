@@ -61,7 +61,7 @@ class CustomersController extends AbstractController
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
         $customer = $this->customersRepository->findById($customerId, $customerType, $customerIdentifierType);
         if($customer){
-            $this->logger->error("Conflicto: El cliente ya existe");
+            $this->logger->error("Conflict: Customer already exist");
             $response = new JsonResponse();
             $response->setContent('El cliente ya existe');
             $response->setStatusCode(409);
@@ -150,15 +150,19 @@ class CustomersController extends AbstractController
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         $dataJson = json_decode($request->getContent(), true);
-        $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson);
+        $requestValidator = $this->requestValidatorService->validateRequestUpdateCustomer($dataJson);
         $customerId=  $dataJson['identification']["value"];
         $customerType=  $dataJson['customerType'];
         $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];
         
         $customer = $this->customersRepository->findById($customerId,$customerType,$customerIdentifierType);
         
-        if(is_null($customer)){
-            throw new BadRequestHttpException('400 Customer not exist', null, 400);
+        if(!$customer){
+            $this->logger->error('Customer not exist');
+            $response = new JsonResponse();
+            $response->setContent('El cliente no existe');
+            $response->setStatusCode(404);
+            return $response;
         }
 
         $customer = $this->customersRepository->update($customer, $dataJson);
