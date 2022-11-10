@@ -257,7 +257,6 @@ class CustomersRepository extends ServiceEntityRepository
            ->orderBy('c.id', 'ASC')
            ->setMaxResults($row)
            ->setFirstResult($initialRow)
-          
            ->getQuery()
            ->getResult()
        ;
@@ -266,14 +265,27 @@ class CustomersRepository extends ServiceEntityRepository
    public function findByExpresion(string $expresion, $row, $initialRow)
    {
     return $this->createQueryBuilder('c')
-           
            ->Where('LOWER(c.comercialName) LIKE :expresion')
            ->OrWhere('LOWER(c.firstName) LIKE :expresion')
            ->setParameter('expresion', $expresion)
            ->orderBy('c.id', 'ASC')
+           ->getQuery()
            ->setMaxResults($row)
            ->setFirstResult($initialRow)
-          
+           ->getResult()
+       ;
+   }
+
+   public function findOnlyByExpresion(string $expression)
+   {
+    return $this->createQueryBuilder('c')
+           ->Where('LOWER(c.comercialName) LIKE :expression')
+           ->OrWhere('LOWER(c.firstName) LIKE :expression')
+           ->OrWhere('LOWER(c.middleName) LIKE :expression')
+           ->OrWhere('LOWER(c.lastName) LIKE :expression')
+           ->OrWhere('LOWER(c.secondLastName) LIKE :expression')
+           ->setParameter('expression', $expression)
+           ->orderBy('c.id', 'ASC')
            ->getQuery()
            ->getResult()
        ;

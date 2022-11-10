@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Contraints as Assert;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[ORM\Entity(repositoryClass: CustomersRepository::class)]
 class Customers
@@ -27,7 +28,7 @@ class Customers
     #[ORM\JoinColumn(name:"identifier_types_id", referencedColumnName:"id")]
     private  $identifierTypes;
 
-    #[ORM\Column(length: 128, nullable: true)]
+    #[ORM\Column(type: "string", length: 128, nullable: true)]
     private ?string $comercialName = null;
 
     #[ORM\Column(length: 128, nullable: true)]
@@ -115,13 +116,13 @@ class Customers
         return $information;      
     }
 
-    public function getAllByRetrieve($customerPhones)
+    public function getAllByRetrieve($customerPhones, $customerContract)
     {
         $phoneNumberArray = [];
         foreach($customerPhones as $customerPhone){
             array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
         }
-
+        
         $information = [
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),
@@ -133,10 +134,34 @@ class Customers
             'secondLastName'=>$this->secondLastName,
             'email'=>$this->email,
             'phoneNumber'=>$phoneNumberArray,
-            'balance'=> 0,
-            'status'=>'ACTIVO'
+            'contractId'=>$customerContract['IdContract'],
+            'balance'=> $customerContract['Balance'],
+            'status'=>$customerContract['Status']
+        ];         
+        return $information;   
+    }
+
+    public function getByExpressionRetrieveCustomer($customerPhones)
+    {
+        $phoneNumberArray = [];
+        foreach($customerPhones as $customerPhone){
+            array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
+        }
+        
+        $information = [
+            'id'=> $this->id,
+            'customerTypes'=> $this->customerTypes->getId(),
+            'identifierTypes'=> $this->identifierTypes->getId(),
+            'comercialName'=> $this->comercialName,
+            'firstName'=>$this->firstName,
+            'middleName'=>$this->middleName,
+            'lastName'=>$this->lastName,
+            'secondLastName'=>$this->secondLastName,
+            'email'=>$this->email,
+            'phoneNumber'=>$phoneNumberArray
         ];
-        return $information;      
+        return $information;
+
     }
 
     public function getId(): ?string
@@ -149,11 +174,11 @@ class Customers
         return $this-> id = $id ;
     }
 
-    public function setPrimaryKeys(string $id, CustomerTypes $customerTypes, IdentifierTypes $identifierTypes){
-         $this  ->setId($id);
-        $this -> setCustomerTypes($customerTypes);
-        $this  -> setIdentifierTypes($identifierTypes);
-
+    public function setPrimaryKeys(string $id, CustomerTypes $customerTypes, IdentifierTypes $identifierTypes)
+    {
+        $this->setId($id);
+        $this->setCustomerTypes($customerTypes);
+        $this->setIdentifierTypes($identifierTypes);
     }
 
     public function getComercialName(): ?string

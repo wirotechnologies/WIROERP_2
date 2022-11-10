@@ -100,4 +100,10 @@ class RequestValidator
         return 'OK';
     }
 
+    public function validateRequestRetrieveCustomersByExpression($request)
+    {
+        $expression = $request->query->get('expression') ?? throw new BadRequestHttpException('400', null, 400);
+        return 'OK';
+    }
+
 }
