@@ -20,7 +20,7 @@ class RequestValidator
         $customerType =  $dataJson['customerType'];
         if($customerType == 2){
             $uploadFileIdentificationDocument = $request->files->get('fileCamaraComercio') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
-            $comercialName = $dataJson['comercialName'] ?? throw new BadRequestHttpException('400', null, 400);
+            $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
             $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
@@ -57,7 +57,7 @@ class RequestValidator
         $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
         $customerType =  $dataJson['customerType'];
         if($customerType == 2){
-            $comercialName = $dataJson['comercialName'] ?? throw new BadRequestHttpException('400', null, 400);
+            $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
             $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);

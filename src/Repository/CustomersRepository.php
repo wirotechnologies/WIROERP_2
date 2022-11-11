@@ -59,8 +59,8 @@ class CustomersRepository extends ServiceEntityRepository
         $customer->setEmail($email);
         
         if ($customerTypeId == 2){
-            $comercialName = $dataJson['comercialName'];
-            $customer->setComercialName($comercialName);
+            $commercialName = $dataJson['commercialName'];
+            $customer->setCommercialName($commercialName);
         } 
         else{
             $firstName = $dataJson['firstName'];
@@ -89,9 +89,9 @@ class CustomersRepository extends ServiceEntityRepository
         }
 
         if($custType->getId() == 2 ){
-            $comercialName = $dataJson['comercialName'] ?? throw new BadRequestHttpException('400', null, 400);
-            if (!is_null($comercialName)){
-                $customer->setComercialName($comercialName);
+            $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
+            if (!is_null($commercialName)){
+                $customer->setCommercialName($commercialName);
                 $date = new \DateTime();
                 $customer->setUpdatedDate($date);
             }
@@ -144,11 +144,11 @@ class CustomersRepository extends ServiceEntityRepository
     }
 
 
-   public function findComercial($comercialName)
+   public function findComercial($commercialName)
    {
         $qb = $this->createQueryBuilder('c')
-           ->andWhere('c.comercialName = :comercialName')
-           ->setParameter('comercialName', $comercialName)
+           ->andWhere('c.commercialName = :commercialName')
+           ->setParameter('commercialName', $commercialName)
         //    ->getQuery()
         //    ->getResult()
         ;
@@ -222,7 +222,7 @@ class CustomersRepository extends ServiceEntityRepository
 //    {
 //     return $this->createQueryBuilder('c')
            
-//            ->Where('LOWER(c.comercialName) LIKE :expresion')
+//            ->Where('LOWER(c.commercialName) LIKE :expresion')
 //            ->OrWhere('LOWER(c.firstName) LIKE :expresion')
 //            ->setParameter('expresion', $expresion)
 //            ->orderBy('c.id', 'ASC')
@@ -265,7 +265,7 @@ class CustomersRepository extends ServiceEntityRepository
    public function findByExpresion(string $expresion, $row, $initialRow)
    {
     return $this->createQueryBuilder('c')
-           ->Where('LOWER(c.comercialName) LIKE :expresion')
+           ->Where('LOWER(c.commercialName) LIKE :expresion')
            ->OrWhere('LOWER(c.firstName) LIKE :expresion')
            ->setParameter('expresion', $expresion)
            ->orderBy('c.id', 'ASC')
@@ -279,7 +279,7 @@ class CustomersRepository extends ServiceEntityRepository
    public function findOnlyByExpresion(string $expression)
    {
     return $this->createQueryBuilder('c')
-           ->Where('LOWER(c.comercialName) LIKE :expression')
+           ->Where('LOWER(c.commercialName) LIKE :expression')
            ->OrWhere('LOWER(c.firstName) LIKE :expression')
            ->OrWhere('LOWER(c.middleName) LIKE :expression')
            ->OrWhere('LOWER(c.lastName) LIKE :expression')

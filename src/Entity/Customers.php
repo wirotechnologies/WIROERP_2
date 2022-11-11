@@ -29,7 +29,7 @@ class Customers
     private  $identifierTypes;
 
     #[ORM\Column(type: "string", length: 128, nullable: true)]
-    private ?string $comercialName = null;
+    private ?string $commercialName = null;
 
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $firstName = null;
@@ -101,7 +101,7 @@ class Customers
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),
             'identifierTypes'=> $this->identifierTypes->getId(),
-            'comercialName'=> $this->comercialName,
+            'commercialName'=> $this->commercialName,
             'mainContact'=>$contactsArray,
             'firstName'=>$this->firstName,
             'middleName'=>$this->middleName,
@@ -127,7 +127,7 @@ class Customers
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),
             'identifierTypes'=> $this->identifierTypes->getId(),
-            'comercialName'=> $this->comercialName,
+            'commercialName'=> $this->commercialName,
             'firstName'=>$this->firstName,
             'middleName'=>$this->middleName,
             'lastName'=>$this->lastName,
@@ -147,12 +147,12 @@ class Customers
         foreach($customerPhones as $customerPhone){
             array_push($phoneNumberArray, $customerPhone->getPhonesNumber()->getPhoneNumber());
         }
-        
+
         $information = [
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),
             'identifierTypes'=> $this->identifierTypes->getId(),
-            'comercialName'=> $this->comercialName,
+            'commercialName'=> $this->commercialName,
             'firstName'=>$this->firstName,
             'middleName'=>$this->middleName,
             'lastName'=>$this->lastName,
@@ -181,14 +181,14 @@ class Customers
         $this->setIdentifierTypes($identifierTypes);
     }
 
-    public function getComercialName(): ?string
+    public function getcommercialName(): ?string
     {
-        return $this->comercialName;
+        return $this->commercialName;
     }
 
-    public function setComercialName(?string $comercialName): self
+    public function setCommercialName(?string $commercialName): self
     {
-        $this->comercialName = $comercialName;
+        $this->commercialName = $commercialName;
 
         return $this;
     } 
