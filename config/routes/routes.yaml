@@ -19,6 +19,11 @@ retrieve_customers:
     controller: App\Controller\retrieveCustomersController::retrieveListCustomers
     methods:    GET 
 
+retrieve_customers_info:
+    path: /v1/customers/retrieve-customers-info
+    controller: App\Controller\RetrieveCustomersInfoController::retrieveCustomersInfo
+    methods: POST 
+
 retrieve_customers_by_expression:
     path: /v1/retrievecustomer/expression
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression
