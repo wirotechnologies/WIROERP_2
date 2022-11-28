@@ -84,7 +84,7 @@ class Customers
 
         $referencesArray = [];
         foreach($customerReferences as $customerReference){
-            $contentReference = ['fullName'=>$customerReference->getFullName(),'type'=> $customerReference->getReferencesIdentifierTypes()->getId(), 'contactPhone'=>$customerReference->getPhoneNumber()];
+            $contentReference = ['fullName'=>$customerReference->getFullName(),'typeReference'=> $customerReference->getTypeReference(), 'contactPhone'=>$customerReference->getPhoneNumber()];
             array_push($referencesArray,$contentReference);
         }
 

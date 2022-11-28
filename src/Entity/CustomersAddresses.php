@@ -42,7 +42,7 @@ class CustomersAddresses
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
     private ?string $zipcode ;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 2, scale: '0', nullable: true)]
+    #[ORM\Column(length: 128, nullable: true)]
     private ?int $socioeconomicStatus;
 
      /**
