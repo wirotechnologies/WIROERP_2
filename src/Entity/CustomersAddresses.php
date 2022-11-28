@@ -43,7 +43,7 @@ class CustomersAddresses
     private ?string $zipcode ;
 
     #[ORM\Column(length: 128, nullable: true)]
-    private ?int $socioeconomicStatus;
+    private ?string $socioeconomicStatus;
 
      /**
      * @var string
@@ -146,6 +146,7 @@ class CustomersAddresses
 
         return $this;
     }
+
 
     /**
      * Get the value of socioeconomicStatus
