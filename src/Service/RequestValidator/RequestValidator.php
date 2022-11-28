@@ -46,7 +46,6 @@ class RequestValidator
         foreach($references as $reference){
             $fullNameReference = $reference['fullName'] ?? throw new BadRequestHttpException('400', null, 400);
             $phoneReference = $reference['contactPhone'] ?? throw new BadRequestHttpException('400', null, 400);
-            $idTypeReference = $reference['type'] ?? throw new BadRequestHttpException('400', null, 400);
         }
         
         return 'OK';

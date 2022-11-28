@@ -46,12 +46,11 @@ class CustomersReferencesRepository extends ServiceEntityRepository
     {
         $fullNameReference = $reference['fullName'] ?? throw new BadRequestHttpException('400', null, 400);
         $phoneReference = $reference['contactPhone'] ?? throw new BadRequestHttpException('400', null, 400);
-        $idTypeReference = $reference['type'] ?? throw new BadRequestHttpException('400', null, 400);
-        $identifierTypeReference = $this->identifierRepository->find($idTypeReference);
+        $typeReference = isset($reference['typeReference']) ? $reference['typeReference']:Null;
         $customerReference = new CustomersReferences();
         $date = new \DateTime();
         $customerReference->setCustomers($customer);
-        $customerReference->setReferencesIdentifierTypes($identifierTypeReference);
+        $customerReference->setTypeReference($typeReference);
         $customerReference->setFullName($fullNameReference);
         $customerReference->setPhoneNumber($phoneReference);
         $customerReference->setReferencesCountriesPhoneCode($countryPhoneCode);

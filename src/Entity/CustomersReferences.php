@@ -32,6 +32,9 @@ class CustomersReferences
     private ?CountriesPhoneCode $referencesCountriesPhoneCode;
 
     #[ORM\Column(length: 128, nullable: true)]
+    private ?string $typeReference = null;
+
+    #[ORM\Column(length: 128, nullable: true)]
     private ?string $fullName = null;
 
     #[ORM\Column(name:"phone_number", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
@@ -81,18 +84,6 @@ class CustomersReferences
         return $this;
     }
 
-    public function getReferencesIdentifierTypes(): ?IdentifierTypes
-    {
-        return $this->referencesIdentifierTypes;
-    }
-
-    public function setReferencesIdentifierTypes(?IdentifierTypes $referencesIdentifierTypes): self
-    {
-        $this->referencesIdentifierTypes = $referencesIdentifierTypes;
-
-        return $this;
-    }
-
     public function getReferencesCountriesPhoneCode(): ?CountriesPhoneCode
     {
         return $this->referencesCountriesPhoneCode;
@@ -121,6 +112,26 @@ class CustomersReferences
     public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of typeReference
+     */ 
+    public function getTypeReference()
+    {
+        return $this->typeReference;
+    }
+
+    /**
+     * Set the value of typeReference
+     *
+     * @return  self
+     */ 
+    public function setTypeReference($typeReference)
+    {
+        $this->typeReference = $typeReference;
 
         return $this;
     }
