@@ -121,7 +121,7 @@ class Customers
             'customerTypes'=> $this->customerTypes->getId(),
             'identifierTypes'=> $this->identifierTypes->getId(),
             'commercialName'=> $this->commercialName,
-            'taxesInformation'=>$taxesInformationArray;
+            'taxesInformation'=>$taxesInformationArray,
             'mainContact'=>$contactsArray,
             'firstName'=>$this->firstName,
             'middleName'=>$this->middleName,
