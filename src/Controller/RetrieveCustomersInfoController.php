@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\RequestValidator\RequestValidator;
 use App\Repository\CustomersRepository;
+use App\Repository\TaxesInformationRepository;
 use App\Repository\CustomersContactRepository;
 use App\Repository\CustomersPhonesRepository;
 use App\Repository\CustomersAddressesRepository;
@@ -23,6 +24,7 @@ class RetrieveCustomersInfoController extends AbstractController
     public function __construct(
         private RequestValidator $requestValidatorService,
         private CustomersRepository $customersRepository,
+        private TaxesInformationRepository $taxesInformationRepository,
         private CustomersContactRepository $customerContactRepository,
         private CustomersPhonesRepository $customerPhoneRepository,
         private CustomersAddressesRepository $customerAddressRepository,
