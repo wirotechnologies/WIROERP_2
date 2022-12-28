@@ -42,15 +42,15 @@ class TaxesInformationRepository extends ServiceEntityRepository
     public function create($customer, $dataJson){
         $date = new \DateTime();
         //Obligaciones Tributarias
-        $granContribuyente = $dataJson['granContribuyente'];
-        $autorretenedor = $dataJson['autorretenedor'];
-        $agenteDeRetencionIVA = $dataJson['agenteRetencionIVA'];
-        $regimenSimple = $dataJson['regimenSimpleTributacion'];
-        $impuestoNacionalConsumo = $dataJson['impuestoNacionalConsumo'];
-        $impuestoSobreVentasIVA = $dataJson['impuestoSobreVentas'];
+        $granContribuyente = $dataJson['taxesInformation']['granContribuyente'];
+        $autorretenedor = $dataJson['taxesInformation']['autorretenedor'];
+        $agenteDeRetencionIVA = $dataJson['taxesInformation']['agenteRetencionIVA'];
+        $regimenSimple = $dataJson['taxesInformation']['regimenSimpleTributacion'];
+        $impuestoNacionalConsumo = $dataJson['taxesInformation']['impuestoNacionalConsumo'];
+        $impuestoSobreVentasIVA = $dataJson['taxesInformation']['impuestoSobreVentas'];
         //Tipo de organizacion Juridica (persona juridica o natural Segun el RUT)
-        $typePerson = $dataJson['typePerson'];
-        $dvNit = $dataJson['dvNit'];
+        $typePerson = $dataJson['taxesInformation']['typePerson'];
+        $dvNit = $dataJson['taxesInformation']['dvNit'];
 
         $taxesInformation = new TaxesInformation();
         $taxesInformation->setCustomers($customer);
