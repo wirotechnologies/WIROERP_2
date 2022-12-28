@@ -52,7 +52,7 @@ class Customers
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts)
+    public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation)
     {
        
         if($customerContacts == []){
@@ -76,6 +76,25 @@ class Customers
             array_push($contactsArray,$contentContact);
             }
         }
+
+        if(!$customerTaxesInformation){
+            $taxesInformationArray = Null;
+        }
+        else{
+            $taxesInformationArray = [
+                'dvNit' = $customerTaxesInformation->getDvNit();
+                'typePerson' = $customerTaxesInformation->getTypePerson();
+                'granContribuyente' = $customerTaxesInformation->isGranContribuyente();
+                'autorretenedor' = $customerTaxesInformation->isAutorretenedor();
+                'agenteDeRetencionIVA' = $customerTaxesInformation->isAgenteDeRetencionIVA();
+                'regimenSimple' = $customerTaxesInformation->isRegimenSimple();
+                'impuestoNacionalConsumo' = $customerTaxesInformation->isImpuestoNacionalConsumo();
+                'impuestoSobreVentasIVA' = $customerTaxesInformation->isImpuestoSobreVentasIVA();
+            ];
+
+        }
+        
+        
         
         $phoneNumberArray = [];
         foreach($customerPhones as $customerPhone){
@@ -102,6 +121,7 @@ class Customers
             'customerTypes'=> $this->customerTypes->getId(),
             'identifierTypes'=> $this->identifierTypes->getId(),
             'commercialName'=> $this->commercialName,
+            'taxesInformation'=>$taxesInformationArray;
             'mainContact'=>$contactsArray,
             'firstName'=>$this->firstName,
             'middleName'=>$this->middleName,

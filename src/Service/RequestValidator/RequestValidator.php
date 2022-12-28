@@ -20,7 +20,20 @@ class RequestValidator
         $customerType =  $dataJson['customerType'];
         if($customerType == 2){
             $uploadFileIdentificationDocument = $request->files->get('fileCamaraComercio') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $uploadFileRUT = $request->files->get('fileRUT') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
             $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
+            
+            //Obligaciones Tributarias
+            $granContribuyente = $dataJson['granContribuyente'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $autorretenedor = $dataJson['autorretenedor'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $agenteDeRetencionIVA = $dataJson['agenteRetencionIVA'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $regimenSimple = $dataJson['regimenSimpleTributacion'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $impuestoNacionalConsumo = $dataJson['impuestoNacionalConsumo'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $impuestoSobreVentasIVA = $dataJson['impuestoSobreVentas'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            //Tipo de organizacion Juridica (persona juridica o natural Segun el RUT)
+            $typePerson = $dataJson['typePerson'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            $dvNit = $dataJson['dvNit'] ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
             $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);

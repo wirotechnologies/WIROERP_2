@@ -63,8 +63,8 @@ class CustomersController extends AbstractController
         if($customer){
             $this->logger->error("Conflict: Customer already exist");
             $response = new JsonResponse();
-            $response->setContent('El cliente ya existe');
-            $response->setStatusCode(409);
+            $response->setContent(json_encode(['error'=> 'El cliente ya existe']));
+            //$response->setStatusCode(409);
             return $response;
         }
 
@@ -75,9 +75,14 @@ class CustomersController extends AbstractController
         $entityManager->persist($customer);
 
         if($customerType == 2){
+            //taxesInformation guarda la informacion de obligaciones tributarias del cliente comercial
+            $taxesInformation = $this->taxesInformationRepository->create($customer, $dataJson);
+            $entityManager->persist($taxesInformation);
+            
             $mainContact = $dataJson['mainContact'];
             $contactId = $mainContact['identification']['value'];
             $identTypeContact = $mainContact['identification']['idIdentifierType'];
+            
             $contact = $this->contactRepository->findById($contactId,$identTypeContact);
             if(is_null($contact)){
                 $contact = $this->contactRepository->create($dataJson);
@@ -131,13 +136,19 @@ class CustomersController extends AbstractController
             $uploadedFileCamaraComercio = $this->customerFilesRepository->create($newFilenameCamaraComercio, $customer);
             $uploadedFileCamaraComercio->setDocumentationType('Cámara de Comercio');
             $entityManager->persist($uploadedFileCamaraComercio);
+
+            $uploadFileRUT = $request->files->get('fileRUT');
+            $newFilenameRUT = $this->uploadFilesService->upload($uploadFileRUT, $destination);
+            $uploadedFileRUT = $this->customerFilesRepository->create($newFilenameRUT, $customer);
+            $uploadedFileRUT->setDocumentationType('RUT');
+            $entityManager->persist($uploadedFileRUT);
         }
 
         $entityManager->flush(); 
         $idCustomer = $customer->getId();
         $response = new JsonResponse();
         $response->setStatusCode(201); 
-        $response->setContent(json_encode(['Created_Customer' => $idCustomer])) ;
+        $response->setContent(json_encode(['createdCustomer' => $idCustomer])) ;
         return $response;
         
 
@@ -160,8 +171,8 @@ class CustomersController extends AbstractController
         if(!$customer){
             $this->logger->error('Customer not exist');
             $response = new JsonResponse();
-            $response->setContent('El cliente no existe');
-            $response->setStatusCode(404);
+            $response->setContent(json_encode(['error'=> 'El cliente no existe']));
+            //$response->setStatusCode(404);
             return $response;
         }
 
@@ -249,7 +260,7 @@ class CustomersController extends AbstractController
         $entityManager->flush();  
         $idCustomer = $customer->getId();
         $response = new JsonResponse();
-        $response->setContent(json_encode(['Updated_Customer' => $idCustomer])) ;
+        $response->setContent(json_encode(['updatedCustomer' => $idCustomer])) ;
         return $response;
     }
 }      

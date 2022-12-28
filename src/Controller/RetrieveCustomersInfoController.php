@@ -55,11 +55,12 @@ class RetrieveCustomersInfoController extends AbstractController
                 ]);
                 continue;
             }
+            $customerTaxesInformation = $this->taxesInformationRepository->findBy(['customers' => $customer]);
             $customerContacts = $this->customerContactRepository->findByCustomer($customer);
             $customerPhones = $this->customerPhoneRepository->findByCustomer($customer);
             $customerAddress = $this->customerAddressRepository->findOneByCustomer($customer);
             $customerReferences = $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
-            array_push($jsonResponse,$customer->getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts));
+            array_push($jsonResponse,$customer->getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation));
         }
 
         $response = new JsonResponse();
