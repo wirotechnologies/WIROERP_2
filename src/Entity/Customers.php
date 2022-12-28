@@ -82,14 +82,14 @@ class Customers
         }
         else{
             $taxesInformationArray = [
-                'dvNit' = $customerTaxesInformation->getDvNit();
-                'typePerson' = $customerTaxesInformation->getTypePerson();
-                'granContribuyente' = $customerTaxesInformation->isGranContribuyente();
-                'autorretenedor' = $customerTaxesInformation->isAutorretenedor();
-                'agenteDeRetencionIVA' = $customerTaxesInformation->isAgenteDeRetencionIVA();
-                'regimenSimple' = $customerTaxesInformation->isRegimenSimple();
-                'impuestoNacionalConsumo' = $customerTaxesInformation->isImpuestoNacionalConsumo();
-                'impuestoSobreVentasIVA' = $customerTaxesInformation->isImpuestoSobreVentasIVA();
+                'dvNit' = $customerTaxesInformation->getDvNit(),
+                'typePerson' = $customerTaxesInformation->getTypePerson(),
+                'granContribuyente' = $customerTaxesInformation->isGranContribuyente(),
+                'autorretenedor' = $customerTaxesInformation->isAutorretenedor(),
+                'agenteDeRetencionIVA' = $customerTaxesInformation->isAgenteDeRetencionIVA(),
+                'regimenSimple' = $customerTaxesInformation->isRegimenSimple(),
+                'impuestoNacionalConsumo' = $customerTaxesInformation->isImpuestoNacionalConsumo(),
+                'impuestoSobreVentasIVA' = $customerTaxesInformation->isImpuestoSobreVentasIVA()
             ];
 
         }
