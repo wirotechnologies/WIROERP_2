@@ -42,7 +42,7 @@ class TaxesInformation
 
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $regimenSimple = null;
-
+            
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $impuestoNacionalConsumo = null;
 
