@@ -6,7 +6,12 @@ hello:
 create_customers:
     path: /v1/customers
     controller: App\Controller\CustomersController::create
-    methods:    POST    
+    methods:    POST   
+
+create_customers_by_CVS:
+    path: /v1/customers-csv
+    controller: App\Controller\CreateCustomersByCSVController::createBasicResidentialCustomersByCSV
+    methods:    POST     
 
 update_customers:
     path: /v1/customers

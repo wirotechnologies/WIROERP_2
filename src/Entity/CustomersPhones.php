@@ -26,6 +26,11 @@ class CustomersPhones
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private ?Customers $customers;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Status")]
+    #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
+    private ?Status $status;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
@@ -90,6 +95,26 @@ class CustomersPhones
     public function setPhonesNumber($phonesNumber)
     {
         $this->phonesNumber = $phonesNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }

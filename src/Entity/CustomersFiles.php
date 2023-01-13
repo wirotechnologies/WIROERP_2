@@ -23,6 +23,11 @@ class CustomersFiles
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private $customers;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Status")]
+    #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
+    private ?Status $status;
+
     #[ORM\Column(length: 512, nullable: true)]
     private ?string $fileName = null;
 
@@ -74,6 +79,26 @@ class CustomersFiles
     public function setDocumentationType($documentationType)
     {
         $this->documentationType = $documentationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }

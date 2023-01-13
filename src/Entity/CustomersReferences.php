@@ -31,6 +31,11 @@ class CustomersReferences
     #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
     private ?CountriesPhoneCode $referencesCountriesPhoneCode;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Status")]
+    #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
+    private ?Status $status;
+
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $typeReference = null;
 
@@ -132,6 +137,26 @@ class CustomersReferences
     public function setTypeReference($typeReference)
     {
         $this->typeReference = $typeReference;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }

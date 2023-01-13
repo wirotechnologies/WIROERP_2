@@ -10,10 +10,6 @@ use Doctrine\DBAL\Types\Types;
 #[ORM\Entity(repositoryClass: CustomersAddressesRepository::class)]
 class CustomersAddresses
 {
-    //Quien es id? = referencedColumnName:"customers_type_id"
-    //Falta idCustomerTypesCustomers
-    //Se agrego $socieconomicStatus int , ¿type: Types::DECIMAL?
-    //Para probar image type blob ¿type: Types::BLOB?
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"IDENTITY")]
@@ -33,6 +29,16 @@ class CustomersAddresses
     #[ORM\JoinColumn(name:"cities_id", referencedColumnName:"id")]
     private ?Cities $cities;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Neighborhood")]
+    #[ORM\JoinColumn(name:"neighborhood_id", referencedColumnName:"id")]
+    private ?Neighborhood $neighborhood;
+
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Status")]
+    #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
+    private ?Status $status;
+
     #[ORM\Column(length: 256, nullable: true)]
     private ?string $line1;
 
@@ -45,15 +51,8 @@ class CustomersAddresses
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $socioeconomicStatus;
 
-     /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="blob", nullable=true)
-     */
-    private $image;
-
     #[ORM\Column(length: 512, nullable: true)]
-    private ?string $note ;
+    private ?string $note;
     
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate ;
@@ -164,6 +163,46 @@ class CustomersAddresses
     public function setSocioeconomicStatus($socioeconomicStatus)
     {
         $this->socioeconomicStatus = $socioeconomicStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of neighborhood
+     */ 
+    public function getNeighborhood()
+    {
+        return $this->neighborhood;
+    }
+
+    /**
+     * Set the value of neighborhood
+     *
+     * @return  self
+     */ 
+    public function setNeighborhood($neighborhood)
+    {
+        $this->neighborhood = $neighborhood;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }

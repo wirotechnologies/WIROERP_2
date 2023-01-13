@@ -32,6 +32,11 @@ class CustomersContact
     #[ORM\JoinColumn(name:"contacts_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private  $contacts;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"Status")]
+    #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
+    private ?Status $status;
+
 
     public function getId(): ?int
     {
@@ -58,6 +63,26 @@ class CustomersContact
     public function setCustomers(?Customers $customers): self
     {
         $this->customers = $customers;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
