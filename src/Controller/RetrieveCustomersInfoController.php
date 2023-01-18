@@ -49,12 +49,7 @@ class RetrieveCustomersInfoController extends AbstractController
             $identificationTypeId = $customerIds['customerIdentifierType'];
             $customer = $this->customersRepository->findById($identificationValue,  $customerTypeId,  $identificationTypeId);
             if(!$customer){
-                array_push($jsonResponse,[
-                    'id'=> $identificationValue,
-                    'customerTypes'=> $customerTypeId,
-                    'identifierTypes'=> $identificationTypeId,
-                    'message'=> 'El cliente no existe'
-                ]);
+                $jsonResponse[] = [];
                 continue;
             }
             $customerTaxesInformation = $this->taxesInformationRepository->findBy(['customers' => $customer]);
