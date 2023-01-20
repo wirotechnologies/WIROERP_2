@@ -29,6 +29,11 @@ retrieve_customers_info:
     controller: App\Controller\RetrieveCustomersInfoController::retrieveCustomersInfo
     methods: POST 
 
+retrieve_basic_customers_between_microservices:
+    path: /v1/customers/retrieve-basic-customers-info
+    controller: App\Controller\RetrieveBasicCustomersBetweenMicroservicesController::retrieveBasicCustomersBetweenMicroservices
+    methods: POST     
+
 retrieve_customers_by_expression:
     path: /v1/retrievecustomer/expression
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression

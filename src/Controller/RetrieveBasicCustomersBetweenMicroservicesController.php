@@ -1,12 +1,9 @@
 <?php
 namespace App\Controller;
-use App\Service\RequestValidator\RequestValidator;
+use App\Repository\StatusRepository;
 use App\Repository\CustomersRepository;
-use App\Repository\TaxesInformationRepository;
-use App\Repository\CustomersContactRepository;
 use App\Repository\CustomersPhonesRepository;
 use App\Repository\CustomersAddressesRepository;
-use App\Repository\CustomersReferencesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,31 +11,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-
-class RetrieveCustomersInfoController extends AbstractController
+class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractController
 {
     public function __construct(
-        private RequestValidator $requestValidatorService,
+        private StatusRepository $statusRepository,
         private CustomersRepository $customersRepository,
-        private TaxesInformationRepository $taxesInformationRepository,
-        private CustomersContactRepository $customerContactRepository,
         private CustomersPhonesRepository $customerPhoneRepository,
         private CustomersAddressesRepository $customerAddressRepository,
-        private CustomersReferencesRepository $customerReferencesRepository,
         private EntityManagerInterface $entityManager,
         )
     {}
 
-    public function retrieveCustomersInfo(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, HttpClientInterface $client) : Response
+    public function retrieveBasicCustomersBetweenMicroservices(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger) : Response
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         $dataJson = json_decode($request->getContent(), true);
         $customersIds = $dataJson['customersIds'];
-        
+        $status = $this->statusRepository->find(1); //Status:Activo
         $jsonResponse = [];
         foreach($customersIds as $customerIds)
         {
@@ -50,12 +41,9 @@ class RetrieveCustomersInfoController extends AbstractController
                 $jsonResponse[] = [];
                 continue;
             }
-            $customerTaxesInformation = $this->taxesInformationRepository->findBy(['customers' => $customer]);
-            $customerContacts = $this->customerContactRepository->findByCustomer($customer);
-            $customerPhones = $this->customerPhoneRepository->findByCustomer($customer);
-            $customerAddress = $this->customerAddressRepository->findOneByCustomer($customer);
-            $customerReferences = $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
-            array_push($jsonResponse,$customer->getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation));
+            $customerPhones = $this->customerPhoneRepository->findBy(['customers'=>$customer, 'status'=>$status]);
+            $customerAddress = $this->customerAddressRepository->findOneBy(['customers'=>$customer, 'status'=>$status]);
+            $jsonResponse[] = $customer->getBasicInfo($customerPhones, $customerAddress);
         }
 
         $response = new JsonResponse();

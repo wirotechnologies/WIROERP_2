@@ -52,6 +52,43 @@ class Customers
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
+    public function getBasicInfo($customerPhones,$customerAddress)
+    {
+        $information = [
+            'id'=> $this->id,
+            'customerTypes'=> $this->customerTypes->getId(),
+            'identifierTypes'=> $this->identifierTypes->getId(),
+            'commercialName'=> $this->commercialName,
+            'firstName'=>$this->firstName,
+            'middleName'=>$this->middleName,
+            'lastName'=>$this->lastName,
+            'secondLastName'=>$this->secondLastName,
+            'email'=>$this->email,
+        ]; 
+        if(count($customerPhones) == 1){
+            $information['phoneNumbers'] = [$customerPhones[0]->getPhonesNumber()->getPhoneNumber()];
+        }
+        else{
+            $phoneNumberArray = [];
+            foreach($customerPhones as $customerPhone){
+                $phoneNumberArray[] = $customerPhone->getPhonesNumber()->getPhoneNumber();
+            }
+            $information['phoneNumbers'] = $phoneNumberArray;
+        }
+        
+        $information['address'] = [
+            'line1'=>$customerAddress->getLine1(),
+            'line2'=>$customerAddress->getLine2(),
+            'zipcode'=>$customerAddress->getZipcode(),
+            'note'=>$customerAddress->getNote(),
+            'city'=>$customerAddress->getCities()->getName(),
+            'socioeconomicStatus'=>$customerAddress->getSocioeconomicStatus()
+        ];
+
+        return $information;
+        
+    }
+
     public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation)
     {
        
