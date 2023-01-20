@@ -34,6 +34,11 @@ retrieve_basic_customers_between_microservices:
     controller: App\Controller\RetrieveBasicCustomersBetweenMicroservicesController::retrieveBasicCustomersBetweenMicroservices
     methods: POST     
 
+retrieve_basic_customers_by_expression:
+    path: /v1/customers/retrieve-expression-customers
+    controller: App\Controller\RetrieveBasicCustomersByExpressionController::retrieveBasicCustomersBetweenMicroservices
+    methods: GET
+
 retrieve_customers_by_expression:
     path: /v1/retrievecustomer/expression
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression

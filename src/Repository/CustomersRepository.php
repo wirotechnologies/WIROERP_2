@@ -143,7 +143,13 @@ class CustomersRepository extends ServiceEntityRepository
        ;
     }
 
-    
+    public function retrieveCustomersByExpression($statementByExpression)
+    {
+        return $this->createQueryBuilder('c')
+        ->andWhere($statementByExpression)
+        ->getQuery()
+        ->getResult();
+    }
 
 
    public function findComercial($commercialName)
