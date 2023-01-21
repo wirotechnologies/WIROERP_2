@@ -33,28 +33,11 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $jsonResponse = [];
         foreach($customersIds as $customerIds)
         {
-            if(count($customersIds)==1){
-                $statementByIds = "(c.id = '".$customerIds[0]."' AND c.customerTypes = ".$customerIds[1]." AND c.identifierTypes = ".$customerIds[2].")";
+            $customer = $this->customersRepository->findById($customerIds[0],  $customerIds[1],  $customerIds[2]);
+            if(!$customer){
+                $jsonResponse[] = [];
+                continue;
             }
-            else{
-                foreach($customersIds as $key => $customerId){
-                
-                    if($key == 0){
-                        $statementByIds = "((c.id = '".$customerId[0]."' AND c.customerTypes = ".$customerId[1]." AND c.identifierTypes = ".$customerId[2].")";
-                    }
-                    if($customerId == end($customersIds)){
-                        $statementByIds = $statementByIds." OR (c.id = '".$customerId[0]."' AND c.customerTypes = ".$customerId[1]." AND c.identifierTypes = ".$customerId[2]."))";
-                    }
-                    else{
-                        $statementByIds = $statementByIds." OR (c.id = '".$customerId[0]."' AND c.customerTypes = ".$customerId[1]." AND c.identifierTypes = ".$customerId[2].")";
-                    }
-    
-                }
-            }
-        }
-        $jsonResponse = [];
-        $customers = $this->customersRepository->retrieveByIds($statementByIds);
-        foreach($customers as $customer){
             $customerPhones = $this->customerPhoneRepository->findBy(['customers'=>$customer, 'status'=>$status]);
             $customerAddress = $this->customerAddressRepository->findOneBy(['customers'=>$customer, 'status'=>$status]);
             $jsonResponse[] = $customer->getBasicInfo($customerPhones, $customerAddress);
@@ -65,14 +48,4 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         return $response;
     }
 }
-            // $identificationValue = $customerIds['customerIdentification'];
-            // $customerTypeId = $customerIds['customerType'];
-            // $identificationTypeId = $customerIds['customerIdentifierType'];
-            // $customer = $this->customersRepository->findById($identificationValue,  $customerTypeId,  $identificationTypeId);
-            // if(!$customer){
-            //     $jsonResponse[] = [];
-            //     continue;
-            // }
-            // $customerPhones = $this->customerPhoneRepository->findBy(['customers'=>$customer, 'status'=>$status]);
-            // $customerAddress = $this->customerAddressRepository->findOneBy(['customers'=>$customer, 'status'=>$status]);
-            // $jsonResponse[] = $customer->getBasicInfo($customerPhones, $customerAddress);
+            
