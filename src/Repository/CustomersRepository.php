@@ -127,6 +127,19 @@ class CustomersRepository extends ServiceEntityRepository
         return $customer;
     }
 
+    public function jsonTest($dataJson)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+        ->where($qb->expr()->eq(
+            'jsonb_each(c.data)->value',
+            ':value'
+        ))
+        ->setParameter('value', 'item1');
+
+        $result = $qb->getQuery()->getResult();
+    }
+
     public function findById($id,  $customerType,  $identifierCustomerType): ?Customers
     {
        return $this->createQueryBuilder('c')

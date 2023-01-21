@@ -6,11 +6,16 @@ use App\Repository\CustomersPhonesRepository;
 use App\Repository\CustomersAddressesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractController
 {
     public function __construct(
@@ -27,8 +32,39 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $this->logger = $logger;
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
-        $dataJson = json_decode($request->getContent(), true);
-        $customersIds = $dataJson['customersIds'];
+        $dataJson = $request->getContent();
+        $json = '{"customersIds":[{"customersId":4616813,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6189038,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6220036,"customersCustomerTypesId":1,"customersIdentifierTypesId":1}]}';
+        $conn = $entityManager->getConnection();
+        $query = "WITH json_data AS (SELECT :json::jsonb AS data)
+        SELECT *
+        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
+        WHERE ids.id->>'customersId' = c.id";
+
+        //$stmt = $conn->prepare($query);
+        //$stmt->bindValue('json', $json);
+        $rsm = new ResultSetMappingBuilder($entityManager);
+       // $rsm->addEntityResult('\App\Entity\CustomerForJson', 'c');
+       // $rsm->addFieldResult('c', 'id', 'id');
+        //$rsm->addJoinedEntityResult('CustomerTypes', 'ct','c')
+        //$rsm->addFieldResult('c', 'customer_types_id', 'customer_types_id');
+        //$rsm->addFieldResult('c', 'id', 'id');
+        //$rsm->addFieldResult('c', 'first_name', 'firstName');
+        $rsm->addRootEntityFromClassMetadata('\App\Entity\CustomerForJson', 'c');
+        $stmt2 = $entityManager->createNativeQuery($query, $rsm)
+                  ->setParameter('json', $json)
+                  ->getResult();
+        
+
+        //dd($stmt2);
+        //$stmt->execute();
+        //$result = $stmt->getResult();
+        return $this->json([
+            'customers' => $stmt2
+            
+        ]); 
+        dd($dataJson);
+        //$customersIds = $dataJson['customersIds'];
+        
         $status = $this->statusRepository->find(1); //Status:Activo
         $jsonResponse = [];
         foreach($customersIds as $customerIds)
