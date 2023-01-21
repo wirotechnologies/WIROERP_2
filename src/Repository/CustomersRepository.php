@@ -143,6 +143,14 @@ class CustomersRepository extends ServiceEntityRepository
        ;
     }
 
+    public function retrieveByIds($statementByIds)
+    {
+        return $this->createQueryBuilder('c')
+        ->andWhere($statementByIds)
+        ->getQuery()
+        ->getResult();
+    }
+
     public function retrieveCustomersByExpression($statementByExpression)
     {
         return $this->createQueryBuilder('c')
