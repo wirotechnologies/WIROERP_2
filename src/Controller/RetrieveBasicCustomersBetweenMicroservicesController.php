@@ -16,6 +16,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractController
 {
     public function __construct(
@@ -27,14 +28,15 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         )
     {}
 
-    public function retrieveBasicCustomersBetweenMicroservices(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger) : Response
+    public function retrieveBasicCustomersBetweenMicroservices(SerializerInterface $serializer, Request $request, ManagerRegistry $doctrine, LoggerInterface $logger) : Response
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         $json = $request->getContent();
+        dd($json);
         //$json = json_encode($json, true);
-        //dd($json);
+        //dd($serializer->serialize($json, 'json'));
         //$json = '{"customersIds":[{"customersId":4616813,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6189038,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6220036,"customersCustomerTypesId":1,"customersIdentifierTypesId":1}]}';
         $conn = $entityManager->getConnection();
         $query = "WITH json_data AS (SELECT :json::jsonb AS data)
