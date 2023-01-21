@@ -49,7 +49,7 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         //$rsm->addFieldResult('c', 'customer_types_id', 'customer_types_id');
         //$rsm->addFieldResult('c', 'id', 'id');
         //$rsm->addFieldResult('c', 'first_name', 'firstName');
-        $rsm->addRootEntityFromClassMetadata('\App\Entity\CustomerForJson', 'c');
+        $rsm->addRootEntityFromClassMetadata('\App\Entity\Customers', 'c');
         $stmt2 = $entityManager->createNativeQuery($query, $rsm)
                   ->setParameter('json', $json)
                   ->getResult();

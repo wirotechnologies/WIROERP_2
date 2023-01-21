@@ -238,6 +238,30 @@ class Customers
         $this->setIdentifierTypes($identifierTypes);
     }
 
+    public function getCustomerTypes()//: //?CustomerTypes
+    {
+        return $this->customerTypes->getId();
+    }
+
+    public function setCustomerTypes(?CustomerTypes $customerTypes): self
+    {
+        $this->customerTypes = $customerTypes;
+
+        return $this;
+    }
+
+    public function getIdentifierTypes()//: ?IdentifierTypes
+    {
+        return $this->identifierTypes->getId();
+    }
+
+    public function setIdentifierTypes(?IdentifierTypes $identifierTypes): self
+    {
+        $this->identifierTypes = $identifierTypes;
+
+        return $this;
+    }
+
     public function getcommercialName(): ?string
     {
         return $this->commercialName;
@@ -311,9 +335,9 @@ class Customers
     }
 
 
-    public function getCreatedDate(): ?\DateTimeInterface
+    public function getCreatedDate()//: ?\DateTimeInterface
     {
-        return $this->createdDate;
+        return $this->createdDate->format('Y-m-d');
     }
 
     public function setCreatedDate(?\DateTimeInterface $createdDate): self
@@ -323,36 +347,14 @@ class Customers
         return $this;
     }
 
-    public function getCustomerTypes(): ?CustomerTypes
-    {
-        return $this->customerTypes;
-    }
-
-    public function setCustomerTypes(?CustomerTypes $customerTypes): self
-    {
-        $this->customerTypes = $customerTypes;
-
-        return $this;
-    }
-
-    public function getIdentifierTypes(): ?IdentifierTypes
-    {
-        return $this->identifierTypes;
-    }
-
-    public function setIdentifierTypes(?IdentifierTypes $identifierTypes): self
-    {
-        $this->identifierTypes = $identifierTypes;
-
-        return $this;
-    }
+   
 
     /**
      * Get the value of updatedDate
      */ 
     public function getUpdatedDate()
     {
-        return $this->updatedDate;
+        return $this->updatedDate->format('Y-m-d');
     }
 
     /**
