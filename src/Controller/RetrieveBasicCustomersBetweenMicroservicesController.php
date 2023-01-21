@@ -34,9 +34,6 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         $json = $request->getContent();
-        dd($json);
-        //$json = json_encode($json, true);
-        //dd($serializer->serialize($json, 'json'));
         //$json = '{"customersIds":[{"customersId":4616813,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6189038,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6220036,"customersCustomerTypesId":1,"customersIdentifierTypesId":1}]}';
         $conn = $entityManager->getConnection();
         $query = "WITH json_data AS (SELECT :json::jsonb AS data)
