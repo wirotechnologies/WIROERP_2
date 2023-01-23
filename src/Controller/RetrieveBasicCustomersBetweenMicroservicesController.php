@@ -41,8 +41,6 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
         WHERE ids.id->>'customersId' = c.id";
 
-        //$stmt = $conn->prepare($query);
-        //$stmt->bindValue('json', $json);
         $rsm = new ResultSetMappingBuilder($entityManager);
        // $rsm->addEntityResult('\App\Entity\CustomerForJson', 'c');
        // $rsm->addFieldResult('c', 'id', 'id');
@@ -54,17 +52,13 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $stmt2 = $entityManager->createNativeQuery($query, $rsm)
                   ->setParameter('json', $json)
                   ->getResult();
+        sort($stmt2);
         
-
-        //dd($stmt2);
-        //$stmt->execute();
-        //$result = $stmt->getResult();
         return $this->json([
             'customers' => $stmt2
             
         ]); 
         dd($dataJson);
-        //$customersIds = $dataJson['customersIds'];
         
         $status = $this->statusRepository->find(1); //Status:Activo
         $jsonResponse = [];
