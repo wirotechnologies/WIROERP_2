@@ -103,7 +103,7 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         ->getResult();
         sort($customerStatement);
         return $this->json([
-            'customers' => $customerStatement
+            'customersAddressesAndCustomers' => $customerStatement
             
         ]); 
         //dd($dataJson);
