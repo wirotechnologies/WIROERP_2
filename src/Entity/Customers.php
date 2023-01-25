@@ -52,42 +52,22 @@ class Customers
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    public function getBasicInfo($customerPhones,$customerAddress)
-    {
-        $information = [
-            'id'=> $this->id,
-            'customerTypes'=> $this->customerTypes->getId(),
-            'identifierTypes'=> $this->identifierTypes->getId(),
-            'commercialName'=> $this->commercialName,
-            'firstName'=>$this->firstName,
-            'middleName'=>$this->middleName,
-            'lastName'=>$this->lastName,
-            'secondLastName'=>$this->secondLastName,
-            'email'=>$this->email,
-        ]; 
-        if(count($customerPhones) == 1){
-            $information['phoneNumbers'] = [$customerPhones[0]->getPhonesNumber()->getPhoneNumber()];
-        }
-        else{
-            $phoneNumberArray = [];
-            foreach($customerPhones as $customerPhone){
-                $phoneNumberArray[] = $customerPhone->getPhonesNumber()->getPhoneNumber();
-            }
-            $information['phoneNumbers'] = $phoneNumberArray;
-        }
+    // public function getBasicInfo()
+    // {
+    //     $information = [
+    //         'id'=> $this->id,
+    //         'customerTypes'=> $this->customerTypes->getId(),
+    //         'identifierTypes'=> $this->identifierTypes->getId(),
+    //         'commercialName'=> $this->commercialName,
+    //         'firstName'=>$this->firstName,
+    //         'middleName'=>$this->middleName,
+    //         'lastName'=>$this->lastName,
+    //         'secondLastName'=>$this->secondLastName,
+    //         'email'=>$this->email,
+    //     ]; 
+    //     return $information;
         
-        $information['address'] = [
-            'line1'=>$customerAddress->getLine1(),
-            'line2'=>$customerAddress->getLine2(),
-            'zipcode'=>$customerAddress->getZipcode(),
-            'note'=>$customerAddress->getNote(),
-            'city'=>$customerAddress->getCities()->getName(),
-            'socioeconomicStatus'=>$customerAddress->getSocioeconomicStatus()
-        ];
-
-        return $information;
-        
-    }
+    // }
 
     public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation)
     {
@@ -337,7 +317,7 @@ class Customers
 
     public function getCreatedDate()//: ?\DateTimeInterface
     {
-        return $this->createdDate->format('Y-m-d');
+        return $this->createdDate->format('Y-m-d H:i:s');
     }
 
     public function setCreatedDate(?\DateTimeInterface $createdDate): self
@@ -354,7 +334,7 @@ class Customers
      */ 
     public function getUpdatedDate()
     {
-        return $this->updatedDate->format('Y-m-d');
+        return $this->updatedDate->format('Y-m-d H:i:s');
     }
 
     /**

@@ -74,6 +74,26 @@ class CustomersAddresses
         return $this;
     }
 
+     /**
+     * Get the value of socioeconomicStatus
+     */ 
+    public function getSocioeconomicStatus()
+    {
+        return $this->socioeconomicStatus;
+    }
+
+    /**
+     * Set the value of socioeconomicStatus
+     *
+     * @return  self
+     */ 
+    public function setSocioeconomicStatus($socioeconomicStatus)
+    {
+        $this->socioeconomicStatus = $socioeconomicStatus;
+
+        return $this;
+    }
+
     public function getLine2(): ?string
     {
         return $this->line2;
@@ -110,7 +130,7 @@ class CustomersAddresses
         return $this;
     }
 
-    public function getCreatedDate(): ?\DateTimeInterface
+    public function getCreatedDate()
     {
         return $this->createdDate;
     }
@@ -122,21 +142,11 @@ class CustomersAddresses
         return $this;
     }
 
-    public function getCustomers(): ?Customers
-    {
-        return $this->customers;
-    }
+    
 
-    public function setCustomers(?Customers $customers): self
+    public function getCities()
     {
-        $this->customers = $customers;
-
-        return $this;
-    }
-
-    public function getCities(): ?Cities
-    {
-        return $this->cities;
+        return $this->cities->getName();
     }
 
     public function setCities(?Cities $cities): self
@@ -147,25 +157,7 @@ class CustomersAddresses
     }
 
 
-    /**
-     * Get the value of socioeconomicStatus
-     */ 
-    public function getSocioeconomicStatus()
-    {
-        return $this->socioeconomicStatus;
-    }
-
-    /**
-     * Set the value of socioeconomicStatus
-     *
-     * @return  self
-     */ 
-    public function setSocioeconomicStatus($socioeconomicStatus)
-    {
-        $this->socioeconomicStatus = $socioeconomicStatus;
-
-        return $this;
-    }
+   
 
     /**
      * Get the value of neighborhood
@@ -203,6 +195,18 @@ class CustomersAddresses
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCustomers()
+    {
+        return $this->customers;
+    }
+
+    public function setCustomers(?Customers $customers): self
+    {
+        $this->customers = $customers;
 
         return $this;
     }

@@ -36,29 +36,77 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $json = $request->getContent();
         //$json = '{"customersIds":[{"customersId":4616813,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6189038,"customersCustomerTypesId":1,"customersIdentifierTypesId":1},{"customersId":6220036,"customersCustomerTypesId":1,"customersIdentifierTypesId":1}]}';
         $conn = $entityManager->getConnection();
-        $query = "WITH json_data AS (SELECT :json::jsonb AS data)
-        SELECT *
-        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
-        WHERE ids.id->>'customersId' = c.id";
-
-        $rsm = new ResultSetMappingBuilder($entityManager);
-       // $rsm->addEntityResult('\App\Entity\CustomerForJson', 'c');
-       // $rsm->addFieldResult('c', 'id', 'id');
-        //$rsm->addJoinedEntityResult('CustomerTypes', 'ct','c')
-        //$rsm->addFieldResult('c', 'customer_types_id', 'customer_types_id');
-        //$rsm->addFieldResult('c', 'id', 'id');
-        //$rsm->addFieldResult('c', 'first_name', 'firstName');
-        $rsm->addRootEntityFromClassMetadata('\App\Entity\Customers', 'c');
-        $stmt2 = $entityManager->createNativeQuery($query, $rsm)
-                  ->setParameter('json', $json)
-                  ->getResult();
-        sort($stmt2);
+        // $query = "WITH json_data AS (SELECT :json::jsonb AS data)
+        // SELECT c.id, c.commercial_name, c.customer_types_id, c.identifier_types_id, c.first_name, c.middle_name, c.last_name, c.second_last_name, c.email,c.created_date, c.updated_date
+        // FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
+        // WHERE ids.id->>'customersId' = c.id";
+        // $rsm = new ResultSetMappingBuilder($entityManager);
+        // $rsm->addRootEntityFromClassMetadata('\App\Entity\Customers', 'c');
+        //$rsm->addRootEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca');
+        //$rsm->addJoinedEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca','c', 'customers');
+        //$rsm->addFieldResult('ca', 'id', 'customerAddressId');
+        //$rsm->addFieldResult('c', 'id', 'customer_id');
         
+        //dd($rsm);
+        //$selectClause = $rsm->generateSelectClause();
+        //dd($query);
+        // $rsm->addJoinedEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca', 'c', 'customers_addresses', array('c.id' => 'ca.customers_id'));
+        // $rsm = new ResultSetMappingBuilder($entityManager);
+        // $rsm->addRootEntityFromClassMetadata('\App\Entity\Customers', 'c');
+        // $rsm->addJoinedEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca', 'c', 'customers_addresses', array('c.id' => 'ca.customers_id'));
+       // $rsm->addFieldResult('c', 'customer_id', 'id');
+        // $customerStatement = $entityManager->createNativeQuery($query, $rsm)
+        //           ->setParameter('json', $json)
+        //           ->getResult();
+        // sort($customerStatement);
+
+        $query = "WITH json_data AS (SELECT :json::jsonb AS data)
+        SELECT  ca.id as customers_address_id, ca.line1, ca.socioeconomic_status, ca.cities_id, c.id as customer_id, c.customer_types_id, c.identifier_types_id, c.first_name, c.middle_name, c.last_name, c.second_last_name, c.commercial_name, c.email, c.created_date, c.updated_date
+        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers_addresses ca
+        INNER JOIN customers c ON c.id = ca.customers_id
+        WHERE ids.id->>'customersId' = ca.customers_id";
+        $rsm = new ResultSetMappingBuilder($entityManager);
+        $rsm->addEntityResult('\App\Entity\CustomersAddresses', 'ca');
+        $rsm->addFieldResult('ca', 'customers_address_id', 'id');
+        $rsm->addFieldResult('ca', 'line1', 'line1');
+        $rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
+        //$rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
+       // $rsm->addFieldResult('ca', 'line1', 'line1');
+        $rsm->addMetaResult('ca', 'customers_id', 'customers_id');
+        $rsm->addMetaResult('ca', 'customers_customer_types_id', 'customers_customer_types_id');
+        $rsm->addMetaResult('ca', 'customers_identifier_types_id', 'customers_identifier_types_id');
+        $rsm->addMetaResult('ca', 'status_id', 'status_id');
+        $rsm->addMetaResult('ca', 'cities_id', 'cities_id');
+        //$rsm->addRootEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca');
+        $rsm->addJoinedEntityResult('\App\Entity\Customers', 'c', 'ca', 'customers');
+        $rsm->addFieldResult('c', 'customer_id', 'id');
+        $rsm->addMetaResult('c', 'customer_types_id', 'customer_types_id');
+        $rsm->addMetaResult('c', 'identifier_types_id', 'identifier_types_id');
+        $rsm->addFieldResult('c', 'first_name', 'firstName');
+        $rsm->addFieldResult('c', 'middle_name', 'middleName');
+        $rsm->addFieldResult('c', 'last_name', 'lastName');
+        $rsm->addFieldResult('c', 'second_last_name', 'secondLastName');
+        $rsm->addFieldResult('c', 'commercial_name', 'commercialName');
+        $rsm->addFieldResult('c', 'email', 'email');
+        $rsm->addFieldResult('c', 'created_date', 'createdDate');
+        $rsm->addFieldResult('c', 'updated_date', 'updatedDate');
+        
+        //$rsm->addFieldResult('c', 'customer_types_id', 'customerTypes');
+        
+        
+        
+        //$rsm->addFieldResult('c', 'id', 'id');
+        //$rsm->addFieldResult('firstName', 'c.first_name', 'firstName');
+        //$rsm->addMetaResult('ca', 'address_id', 'address_id');
+        $customerStatement = $entityManager->createNativeQuery($query, $rsm)
+        ->setParameter('json', $json)
+        ->getResult();
+        sort($customerStatement);
         return $this->json([
-            'customers' => $stmt2
+            'customers' => $customerStatement
             
         ]); 
-        dd($dataJson);
+        //dd($dataJson);
         
         $status = $this->statusRepository->find(1); //Status:Activo
         $jsonResponse = [];

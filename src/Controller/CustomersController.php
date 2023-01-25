@@ -86,7 +86,7 @@ class CustomersController extends AbstractController
             $identTypeContact = $mainContact['identification']['idIdentifierType'];
             
             $contact = $this->contactRepository->findById($contactId,$identTypeContact);
-            if(is_null($contact)){
+            if(!$contact){
                 $contact = $this->contactRepository->create($dataJson);
                 $entityManager->persist($contact);
             }
