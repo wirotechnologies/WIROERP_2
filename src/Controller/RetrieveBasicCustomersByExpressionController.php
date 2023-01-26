@@ -26,10 +26,10 @@ class RetrieveBasicCustomersByExpressionController extends AbstractController
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
-        $expression = $request->query->get('expression');
+        $expression = strtoupper($request->query->get('expression'));
         $status = $this->statusRepository->find(1); //Status:Activo
         $jsonResponse = [];
-        $statementByExpression = "(c.commercialName LIKE "."'%".$expression."%'"." OR c.firstName LIKE "."'%".$expression."%'"." OR c.middleName LIKE "."'%".$expression."%'"." OR c.lastName LIKE "."'%".$expression."%'"." OR c.secondLastName LIKE "."'%".$expression."%'"." OR c.id LIKE "."'%".$expression."%')";
+        $statementByExpression = "(upper(c.commercialName) LIKE "."'%".$expression."%'"." OR upper(c.firstName) LIKE "."'%".$expression."%'"." OR upper(c.middleName) LIKE "."'%".$expression."%'"." OR upper(c.lastName) LIKE "."'%".$expression."%'"." OR upper(c.secondLastName) LIKE "."'%".$expression."%'"." OR c.id LIKE "."'%".$expression."%')";
         $customersByExpression = $this->customersRepository->retrieveCustomersByExpression($statementByExpression);
         foreach($customersByExpression as $customer){
             $customerPhones = $this->customerPhoneRepository->findBy(['customers'=>$customer, 'status'=>$status]);

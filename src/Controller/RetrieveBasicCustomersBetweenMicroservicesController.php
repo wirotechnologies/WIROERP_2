@@ -59,37 +59,63 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         //           ->setParameter('json', $json)
         //           ->getResult();
         // sort($customerStatement);
-
+        // ca.id as customers_address_id, ca.line1, ca.socioeconomic_status, ca.cities_id,
         $query = "WITH json_data AS (SELECT :json::jsonb AS data)
-        SELECT  ca.id as customers_address_id, ca.line1, ca.socioeconomic_status, ca.cities_id, c.id as customer_id, c.customer_types_id, c.identifier_types_id, c.first_name, c.middle_name, c.last_name, c.second_last_name, c.commercial_name, c.email, c.created_date, c.updated_date
-        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers_addresses ca
-        INNER JOIN customers c ON c.id = ca.customers_id
-        WHERE ids.id->>'customersId' = ca.customers_id";
+        SELECT  c.id as customer_id, c.customer_types_id, c.identifier_types_id, c.first_name, c.middle_name, c.last_name, c.second_last_name, c.commercial_name, c.email, c.created_date, c.updated_date, ca.id as customers_address_id, ca.line1, ca.socioeconomic_status, ca.cities_id, ca.status_id
+        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
+        INNER JOIN customers_addresses ca ON c.id = ca.customers_id
+        
+        WHERE ids.id->>'customersId' = c.id";
         $rsm = new ResultSetMappingBuilder($entityManager);
-        $rsm->addEntityResult('\App\Entity\CustomersAddresses', 'ca');
+        $rsm->addRootEntityFromClassMetadata('\App\Entity\Customers', 'c');
+        $rsm->addFieldResult('c', 'customer_id', 'id');
+        $rsm->addMetaResult('c', 'customer_types_id', 'customer_types_id');
+        $rsm->addMetaResult('c', 'identifier_types_id', 'identifier_types_id');
+        $rsm->addJoinedEntityResult('\App\Entity\CustomersAddresses', 'ca', 'c', 'customersAddresses');
         $rsm->addFieldResult('ca', 'customers_address_id', 'id');
         $rsm->addFieldResult('ca', 'line1', 'line1');
-        $rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
-        //$rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
-       // $rsm->addFieldResult('ca', 'line1', 'line1');
         $rsm->addMetaResult('ca', 'customers_id', 'customers_id');
         $rsm->addMetaResult('ca', 'customers_customer_types_id', 'customers_customer_types_id');
         $rsm->addMetaResult('ca', 'customers_identifier_types_id', 'customers_identifier_types_id');
         $rsm->addMetaResult('ca', 'status_id', 'status_id');
         $rsm->addMetaResult('ca', 'cities_id', 'cities_id');
-        //$rsm->addRootEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca');
-        $rsm->addJoinedEntityResult('\App\Entity\Customers', 'c', 'ca', 'customers');
-        $rsm->addFieldResult('c', 'customer_id', 'id');
-        $rsm->addMetaResult('c', 'customer_types_id', 'customer_types_id');
-        $rsm->addMetaResult('c', 'identifier_types_id', 'identifier_types_id');
-        $rsm->addFieldResult('c', 'first_name', 'firstName');
-        $rsm->addFieldResult('c', 'middle_name', 'middleName');
-        $rsm->addFieldResult('c', 'last_name', 'lastName');
-        $rsm->addFieldResult('c', 'second_last_name', 'secondLastName');
-        $rsm->addFieldResult('c', 'commercial_name', 'commercialName');
-        $rsm->addFieldResult('c', 'email', 'email');
-        $rsm->addFieldResult('c', 'created_date', 'createdDate');
-        $rsm->addFieldResult('c', 'updated_date', 'updatedDate');
+        //$rsm->addJoinedEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca', 'c', 'customers_addresses', array('ca.customers_id' => 'c.id'));
+        // $rsm->addFieldResult('ca', 'customers_address_id', 'id');
+        // $rsm->addMetaResult('ca', 'customers_id', 'customers_id');
+        // $rsm->addMetaResult('ca', 'customers_customer_types_id', 'customers_customer_types_id');
+        // $rsm->addMetaResult('ca', 'customers_identifier_types_id', 'customers_identifier_types_id');
+        // $rsm->addMetaResult('ca', 'status_id', 'status_id');
+        // $rsm->addMetaResult('ca', 'cities_id', 'cities_id');
+
+        // $rsm->addEntityResult('\App\Entity\CustomersAddresses', 'ca');
+        // $rsm->addFieldResult('ca', 'customers_address_id', 'id');
+        // $rsm->addFieldResult('ca', 'line1', 'line1');
+        // $rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
+
+        // $rsm->addEntityResult('\App\Entity\CustomersAddresses', 'ca');
+        // $rsm->addFieldResult('ca', 'customers_address_id', 'id');
+        // $rsm->addFieldResult('ca', 'line1', 'line1');
+        // $rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
+        //$rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
+       // $rsm->addFieldResult('ca', 'line1', 'line1');
+        // $rsm->addMetaResult('ca', 'customers_id', 'customers_id');
+        // $rsm->addMetaResult('ca', 'customers_customer_types_id', 'customers_customer_types_id');
+        // $rsm->addMetaResult('ca', 'customers_identifier_types_id', 'customers_identifier_types_id');
+        // $rsm->addMetaResult('ca', 'status_id', 'status_id');
+        // $rsm->addMetaResult('ca', 'cities_id', 'cities_id');
+        // //$rsm->addRootEntityFromClassMetadata('\App\Entity\CustomersAddresses', 'ca');
+        // $rsm->addJoinedEntityResult('\App\Entity\Customers', 'c', 'ca', 'customers');
+        // $rsm->addFieldResult('c', 'customer_id', 'id');
+        // $rsm->addMetaResult('c', 'customer_types_id', 'customer_types_id');
+        // $rsm->addMetaResult('c', 'identifier_types_id', 'identifier_types_id');
+        // $rsm->addFieldResult('c', 'first_name', 'firstName');
+        // $rsm->addFieldResult('c', 'middle_name', 'middleName');
+        // $rsm->addFieldResult('c', 'last_name', 'lastName');
+        // $rsm->addFieldResult('c', 'second_last_name', 'secondLastName');
+        // $rsm->addFieldResult('c', 'commercial_name', 'commercialName');
+        // $rsm->addFieldResult('c', 'email', 'email');
+        // $rsm->addFieldResult('c', 'created_date', 'createdDate');
+        // $rsm->addFieldResult('c', 'updated_date', 'updatedDate');
         
         //$rsm->addFieldResult('c', 'customer_types_id', 'customerTypes');
         

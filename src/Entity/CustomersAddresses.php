@@ -18,7 +18,7 @@ class CustomersAddresses
     private ?int $id = null;
 
     #[ORM\GeneratedValue(strategy:"NONE")]
-    #[ORM\ManyToOne(targetEntity:"Customers")]
+    #[ORM\ManyToOne(targetEntity:"Customers",inversedBy:"customersAddresses")]
     #[ORM\JoinColumn(name:"customers_id", referencedColumnName:"id")]
     #[ORM\JoinColumn(name:"customers_customer_types_id", referencedColumnName:"customer_types_id")]
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
@@ -184,7 +184,7 @@ class CustomersAddresses
      */ 
     public function getStatus()
     {
-        return $this->status;
+        return $this->status->getStatus();
     }
 
     /**
@@ -199,10 +199,10 @@ class CustomersAddresses
         return $this;
     }
 
-    public function getCustomers()
-    {
-        return $this->customers;
-    }
+    // public function getCustomers()
+    // {
+    //     return $this->customers;
+    // }
 
     public function setCustomers(?Customers $customers): self
     {

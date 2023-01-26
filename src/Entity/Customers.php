@@ -28,6 +28,11 @@ class Customers
     #[ORM\JoinColumn(name:"identifier_types_id", referencedColumnName:"id")]
     private  $identifierTypes;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"CustomersAddresses",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"customers_addresses_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $customersAddresses;
+
     #[ORM\Column(type: "string", length: 128, nullable: true)]
     private ?string $commercialName = null;
 
@@ -349,4 +354,24 @@ class Customers
         return $this;
     }
 
+
+    /**
+     * Get the value of customersAddresses
+     */ 
+    public function getCustomersAddresses()
+    {
+        return $this->customersAddresses;
+    }
+
+    /**
+     * Set the value of customersAddresses
+     *
+     * @return  self
+     */ 
+    public function setCustomersAddresses($customersAddresses)
+    {
+        $this->customersAddresses = $customersAddresses;
+
+        return $this;
+    }
 }
