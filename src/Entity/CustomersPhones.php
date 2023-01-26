@@ -47,10 +47,10 @@ class CustomersPhones
         return $this;
     }
 
-    public function getCustomers(): ?Customers
-    {
-        return $this->customers;
-    }
+    // public function getCustomers(): ?Customers
+    // {
+    //     return $this->customers;
+    // }
 
     public function setCustomers(?Customers $customers): self
     {
@@ -84,7 +84,7 @@ class CustomersPhones
      */ 
     public function getPhonesNumber()
     {
-        return $this->phonesNumber;
+        return $this->phonesNumber->getPhoneNumber();
     }
 
     /**
@@ -104,7 +104,7 @@ class CustomersPhones
      */ 
     public function getStatus()
     {
-        return $this->status;
+        return $this->status->getStatus();
     }
 
     /**

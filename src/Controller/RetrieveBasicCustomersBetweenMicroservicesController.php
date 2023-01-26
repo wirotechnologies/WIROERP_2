@@ -74,6 +74,7 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         $rsm->addJoinedEntityResult('\App\Entity\CustomersAddresses', 'ca', 'c', 'customersAddresses');
         $rsm->addFieldResult('ca', 'customers_address_id', 'id');
         $rsm->addFieldResult('ca', 'line1', 'line1');
+        $rsm->addFieldResult('ca', 'socioeconomic_status', 'socioeconomicStatus');
         $rsm->addMetaResult('ca', 'customers_id', 'customers_id');
         $rsm->addMetaResult('ca', 'customers_customer_types_id', 'customers_customer_types_id');
         $rsm->addMetaResult('ca', 'customers_identifier_types_id', 'customers_identifier_types_id');
