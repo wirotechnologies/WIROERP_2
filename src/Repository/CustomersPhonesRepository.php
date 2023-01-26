@@ -45,9 +45,9 @@ class CustomersPhonesRepository extends ServiceEntityRepository
         $date = new \DateTime();
         $customerPhone->setPhonesNumber($number);
         $customerPhone->setCustomers($customer);
+        $customerPhone->setStatus($status);
         $customerPhone->setCreatedDate($date);
         return $customerPhone;
-        
     }
 
     /**

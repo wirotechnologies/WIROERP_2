@@ -39,11 +39,12 @@ class CustomersContactRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($customer, $contact): ?CustomersContact
+    public function create($customer, $contact,$status): ?CustomersContact
     {
         $customerContact = new CustomersContact();
         $customerContact->setCustomers($customer);
-        $customerContact -> setContacts($contact);
+        $customerContact->setContacts($contact);
+        $customerContact->setStatus($status);
         return $customerContact;
     }
 

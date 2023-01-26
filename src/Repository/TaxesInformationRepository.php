@@ -50,8 +50,8 @@ class TaxesInformationRepository extends ServiceEntityRepository
         $impuestoSobreVentasIVA = $dataJson['taxesInformation']['impuestoSobreVentas'];
         //Tipo de organizacion Juridica (persona juridica o natural Segun el RUT)
         $typePerson = $dataJson['taxesInformation']['typePerson'];
-        $dvNit = $dataJson['taxesInformation']['dvNit'];
-
+        $dvNit = isset($dataJson['taxesInformation']['dvNit']) ? $dataJson['taxesInformation']['dvNit'] : Null;
+        
         $taxesInformation = new TaxesInformation();
         $taxesInformation->setCustomers($customer);
         $taxesInformation->setDvNit($dvNit);

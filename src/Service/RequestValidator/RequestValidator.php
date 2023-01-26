@@ -32,7 +32,11 @@ class RequestValidator
             $impuestoSobreVentasIVA = $dataJson['taxesInformation']['impuestoSobreVentas'] ?? throw new BadRequestHttpException('400', null, 400);
             //Tipo de organizacion Juridica (persona juridica o natural Segun el RUT)
             $typePerson = $dataJson['taxesInformation']['typePerson'] ?? throw new BadRequestHttpException('400', null, 400);
-            $dvNit = $dataJson['taxesInformation']['dvNit'] ?? throw new BadRequestHttpException('400', null, 400);
+            $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];
+            if($customerIdentifierType == 2){
+                $dvNit = $dataJson['taxesInformation']['dvNit'] ?? throw new BadRequestHttpException('400', null, 400);
+            }
+            
 
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);

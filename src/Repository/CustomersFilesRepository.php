@@ -39,11 +39,12 @@ class CustomersFilesRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($newFilename, $customer)
+    public function create($newFilename,$customer,$status)
     {
         $uploadedFile = new CustomersFiles();
         $uploadedFile->setFileName($newFilename);
         $uploadedFile->setCustomers($customer);
+        $uploadedFile->setStatus($status);
         return $uploadedFile;
     }
 

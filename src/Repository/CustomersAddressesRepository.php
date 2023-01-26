@@ -40,7 +40,7 @@ class CustomersAddressesRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($dataJson, $customer): ?CustomersAddresses
+    public function create($dataJson,$customer,$status): ?CustomersAddresses
     {
         $address = $dataJson['address'];
         $nameCity = $address['city'];
@@ -59,6 +59,7 @@ class CustomersAddressesRepository extends ServiceEntityRepository
         $customerAddress->setZipcode($zipcode);
         $customerAddress->setSocioeconomicStatus($socioeconomicStatus);
         $customerAddress->setNote($note);
+        $customerAddress->setStatus($status);
         $customerAddress->setCreatedDate($date);
         return $customerAddress;
     }

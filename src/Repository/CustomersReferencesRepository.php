@@ -42,7 +42,7 @@ class CustomersReferencesRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($reference, $customer, $countryPhoneCode) : ?CustomersReferences
+    public function create($reference,$customer,$countryPhoneCode,$status) : ?CustomersReferences
     {
         $fullNameReference = $reference['fullName'] ?? throw new BadRequestHttpException('400', null, 400);
         $phoneReference = $reference['contactPhone'] ?? throw new BadRequestHttpException('400', null, 400);
@@ -54,6 +54,7 @@ class CustomersReferencesRepository extends ServiceEntityRepository
         $customerReference->setFullName($fullNameReference);
         $customerReference->setPhoneNumber($phoneReference);
         $customerReference->setReferencesCountriesPhoneCode($countryPhoneCode);
+        $customerReference->setStatus($status);
         $customerReference->setCreatedDate($date);
         
         return $customerReference;    

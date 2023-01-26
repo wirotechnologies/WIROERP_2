@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Service\RequestValidator\RequestValidator;
 use App\Repository\CustomersRepository;
+use App\Repository\StatusRepository;
 use App\Repository\TaxesInformationRepository;
 use App\Repository\ContactsRepository;
 use App\Repository\CustomersContactRepository;
@@ -33,6 +34,7 @@ class CustomersController extends AbstractController
     public function __construct(
         private RequestValidator $requestValidatorService,
         private CustomersRepository $customersRepository,
+        private StatusRepository $statusRepository,
         private TaxesInformationRepository $taxesInformationRepository,
         private ContactsRepository $contactRepository,
         private CustomersContactRepository $customerContactRepository,
@@ -75,6 +77,7 @@ class CustomersController extends AbstractController
 
         $customer = $this->customersRepository->create($customerId, $customerType, $customerIdentifierType, $dataJson);
         $entityManager->persist($customer);
+        $status = $this->statusRepository->find(1); //Status:Activo for create phone, address, files, contacts, references
 
         if($customerType == 2){
             //taxesInformation guarda la informacion de obligaciones tributarias del cliente comercial
@@ -90,11 +93,11 @@ class CustomersController extends AbstractController
                 $contact = $this->contactRepository->create($dataJson);
                 $entityManager->persist($contact);
             }
-            $customerContact = $this->customerContactRepository->create($customer, $contact);
+            $customerContact = $this->customerContactRepository->create($customer, $contact, $status);
             $entityManager->persist($customerContact);  
         } 
 
-        $customerAddress = $this->customerAddressRepository->create($dataJson, $customer);
+        $customerAddress = $this->customerAddressRepository->create($dataJson, $customer, $status);
         $entityManager->persist($customerAddress);
     
         $phoneNumbers = $dataJson['phoneNumbers'];
@@ -104,44 +107,44 @@ class CustomersController extends AbstractController
 
         foreach ($phoneNumbers as $phoneNumber){
             $number = $this->phoneRepository->findById($phoneNumber, $countryPhoneCode);
-            if(is_null($number)){
+            if(!$number){
                 $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
                 $entityManager->persist($number);
             }
-            $customerPhone = $this->customerPhoneRepository->create($number, $customer);
+            $customerPhone = $this->customerPhoneRepository->create($number,$customer,$status);
             $entityManager->persist($customerPhone);
         }
             
         $references = $dataJson['references'];
         foreach($references as $reference){
-            $customerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
+            $customerReference = $this->customerReferencesRepository->create($reference,$customer,$countryPhoneCode,$status);
             $entityManager->persist($customerReference);
         }
 
         $destination = $this->getParameter('customers_uploads');
         
         $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice');
-        $newFilenameEnergyInvoice = $this->uploadFilesService->upload($uploadFileEnergyInvoice, $destination);
-        $uploadedFileEnergyInvoice = $this->customerFilesRepository->create($newFilenameEnergyInvoice, $customer);
+        $newFilenameEnergyInvoice = $this->uploadFilesService->upload($uploadFileEnergyInvoice,$destination);
+        $uploadedFileEnergyInvoice = $this->customerFilesRepository->create($newFilenameEnergyInvoice,$customer,$status);
         $uploadedFileEnergyInvoice->setDocumentationType('Factura de Energía');
         $entityManager->persist($uploadedFileEnergyInvoice); 
 
         $uploadFileIdentificationDocument = $request->files->get('identificationDocument');
-        $newFilenameIdentificationDocument = $this->uploadFilesService->upload($uploadFileIdentificationDocument, $destination);
-        $uploadedFileIdentificationDocument = $this->customerFilesRepository->create($newFilenameIdentificationDocument, $customer);
+        $newFilenameIdentificationDocument = $this->uploadFilesService->upload($uploadFileIdentificationDocument,$destination);
+        $uploadedFileIdentificationDocument = $this->customerFilesRepository->create($newFilenameIdentificationDocument,$customer,$status);
         $uploadedFileIdentificationDocument->setDocumentationType('Documento de Identificación');
         $entityManager->persist($uploadedFileIdentificationDocument); 
 
         if($customerType == 2){
             $uploadFileCamaraComercio = $request->files->get('fileCamaraComercio');
             $newFilenameCamaraComercio = $this->uploadFilesService->upload($uploadFileCamaraComercio, $destination);
-            $uploadedFileCamaraComercio = $this->customerFilesRepository->create($newFilenameCamaraComercio, $customer);
+            $uploadedFileCamaraComercio = $this->customerFilesRepository->create($newFilenameCamaraComercio,$customer,$status);
             $uploadedFileCamaraComercio->setDocumentationType('Cámara de Comercio');
             $entityManager->persist($uploadedFileCamaraComercio);
 
             $uploadFileRUT = $request->files->get('fileRUT');
             $newFilenameRUT = $this->uploadFilesService->upload($uploadFileRUT, $destination);
-            $uploadedFileRUT = $this->customerFilesRepository->create($newFilenameRUT, $customer);
+            $uploadedFileRUT = $this->customerFilesRepository->create($newFilenameRUT,$customer,$status);
             $uploadedFileRUT->setDocumentationType('RUT');
             $entityManager->persist($uploadedFileRUT);
         }
