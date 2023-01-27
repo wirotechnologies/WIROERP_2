@@ -43,9 +43,9 @@ class CustomersContact
         return $this->id;
     }
 
-    public function getContacts(): ?Contacts
+    public function getContacts()
     {
-        return $this->contacts;
+        return $this->contacts->getAll();
     }
 
     public function setContacts(?Contacts $contacts): self
@@ -55,10 +55,10 @@ class CustomersContact
         return $this;
     }
 
-    public function getCustomers(): ?Customers
-    {
-        return $this->customers;
-    }
+    // public function getCustomers(): ?Customers
+    // {
+    //     return $this->customers;
+    // }
 
     public function setCustomers(?Customers $customers): self
     {
@@ -72,7 +72,7 @@ class CustomersContact
      */ 
     public function getStatus()
     {
-        return $this->status;
+        return $this->status->getStatus();
     }
 
     /**

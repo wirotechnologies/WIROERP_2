@@ -42,6 +42,20 @@ class Contacts
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
+    public function getAll()
+    {
+        $information = [
+            'id' => $this->id,
+            'firstName' => $this->firstName,
+            'middleName' => $this->middleName,
+            'lastName' => $this->lastName,
+            'secondLastName' => $this->secondLastName,
+            'email' => $this->email,
+            'identifierTypes' => $this->identifierTypes->getAll(),
+        ];
+        return $information;
+    }
+
     public function getId(): ?string
     {
         return $this->id;
@@ -117,9 +131,9 @@ class Contacts
         return $this;
     }
 
-    public function getCreatedDate(): ?\DateTimeInterface
+    public function getCreatedDate()
     {
-        return $this->createdDate;
+        return $this->createdDate->format('Y-m-d H:s:i');
     }
 
     public function setCreatedDate(?\DateTimeInterface $createdDate): self
@@ -129,9 +143,9 @@ class Contacts
         return $this;
     }
 
-    public function getIdentifierTypes(): ?IdentifierTypes
+    public function getIdentifierTypes()
     {
-        return $this->identifierTypes;
+        return $this->identifierTypes->getAll();
     }
 
     public function setIdentifierTypes(?IdentifierTypes $identifierTypes): self
@@ -146,7 +160,7 @@ class Contacts
      */ 
     public function getUpdatedDate()
     {
-        return $this->updatedDate;
+        return $this->updatedDate->format('Y-m-d H:s:i');
     }
 
     /**

@@ -132,7 +132,7 @@ class CustomersAddresses
 
     public function getCreatedDate()
     {
-        return $this->createdDate;
+        return $this->createdDate->format('Y-m-d H:i:s');
     }
 
     public function setCreatedDate(?\DateTimeInterface $createdDate): self

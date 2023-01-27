@@ -156,10 +156,10 @@ class TaxesInformation
         return $this;
     }
 
-    public function getCustomers(): ?Customers
-    {
-        return $this->customers;
-    }
+    // public function getCustomers(): ?Customers
+    // {
+    //     return $this->customers;
+    // }
 
     public function setCustomers(?Customers $customers): self
     {

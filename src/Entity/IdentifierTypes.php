@@ -25,6 +25,13 @@ class IdentifierTypes
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
+    public function getAll(){
+        $information = [
+            'id' => $this->id,
+            'identifierName' => $this->identifierName
+        ];
+        return $information;
+    }
 
     public function getId(): ?int
     {

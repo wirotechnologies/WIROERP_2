@@ -42,10 +42,16 @@ retrieve_basic_customers_by_expression:
 retrieve_customers_by_expression:
     path: /v1/retrievecustomer/expression
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression
-    methods: GET     
+    methods: GET    
+
+get-basic-customer:
+    path: v1/customers/basic-customer/{customerTypeId}/{identificationTypeId}/{identificationvalue}
+    # the controller value has the format 'controller_class::method_name' 
+    controller: App\Controller\GetCustomerBasicInfoByIdsController::getCustomerByIds
+    methods:    GET        
 
 get_customer:
-    path: v1/customer/{customerTypeId}/{identificationTypeId}/{identificationvalue}
+    path: v1/customers/{customerTypeId}/{identificationTypeId}/{identificationvalue}
     # the controller value has the format 'controller_class::method_name' 
     controller: App\Controller\GetCustomerByIdsController::getCustomerByIds
     methods:    GET    

@@ -33,6 +33,26 @@ class Customers
     #[ORM\JoinColumn(name:"customers_addresses_id", referencedColumnName:"id")]
     private \Doctrine\Common\Collections\Collection $customersAddresses;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"CustomersPhones",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"customers_phones_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $customersPhones;
+
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"CustomersContact",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"customers_contacts_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $customersContacts;
+
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"TaxesInformation",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"taxes_information_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $taxesInformation;
+
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"CustomersReferences",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"customers_references_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $customersReferences;
+
     #[ORM\Column(type: "string", length: 128, nullable: true)]
     private ?string $commercialName = null;
 
@@ -57,23 +77,20 @@ class Customers
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    // public function getBasicInfo()
-    // {
-    //     $information = [
-    //         'id'=> $this->id,
-    //         'customerTypes'=> $this->customerTypes->getId(),
-    //         'identifierTypes'=> $this->identifierTypes->getId(),
-    //         'commercialName'=> $this->commercialName,
-    //         'firstName'=>$this->firstName,
-    //         'middleName'=>$this->middleName,
-    //         'lastName'=>$this->lastName,
-    //         'secondLastName'=>$this->secondLastName,
-    //         'email'=>$this->email,
-    //     ]; 
-    //     return $information;
-        
-    // }
-
+    public function getAddress(){
+        return [
+            'id'=> $this->id,
+            'customerTypes'=> $this->customerTypes->getId(),
+            'identifierTypes'=> $this->identifierTypes->getId(),
+            'commercialName'=> $this->commercialName,
+            'firstName'=>$this->firstName,
+            'middleName'=>$this->middleName,
+            'lastName'=>$this->lastName,
+            'secondLastName'=>$this->secondLastName,
+            'email'=>$this->email,
+            'customersAddresses'=>$this->customersAddresses[0]
+        ];
+    }
     public function getAll($customerPhones, $customerAddress, $customerReferences, $customerContacts, $customerTaxesInformation)
     {
        
@@ -371,6 +388,66 @@ class Customers
     public function setCustomersAddresses($customersAddresses)
     {
         $this->customersAddresses = $customersAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of customersPhones
+     */ 
+    public function getCustomersPhones()
+    {
+        return $this->customersPhones;
+    }
+
+    /**
+     * Set the value of customersPhones
+     *
+     * @return  self
+     */ 
+    public function setCustomersPhones($customersPhones)
+    {
+        $this->customersPhones = $customersPhones;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of customersContacts
+     */ 
+    public function getCustomersContacts()
+    {
+        return $this->customersContacts;
+    }
+
+    /**
+     * Set the value of customersContacts
+     *
+     * @return  self
+     */ 
+    public function setCustomersContacts($customersContacts)
+    {
+        $this->customersContacts = $customersContacts;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of taxesInformation
+     */ 
+    public function getTaxesInformation()
+    {
+        return $this->taxesInformation;
+    }
+
+    /**
+     * Set the value of taxesInformation
+     *
+     * @return  self
+     */ 
+    public function setTaxesInformation($taxesInformation)
+    {
+        $this->taxesInformation = $taxesInformation;
 
         return $this;
     }

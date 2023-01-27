@@ -35,17 +35,7 @@ class CustomersPhones
     private ?\DateTimeInterface $createdDate = null;
 
 
-    public function getCreatedDate(): ?\DateTimeInterface
-    {
-        return $this->createdDate;
-    }
-
-    public function setCreatedDate(?\DateTimeInterface $createdDate): self
-    {
-        $this->createdDate = $createdDate;
-
-        return $this;
-    }
+    
 
     // public function getCustomers(): ?Customers
     // {
@@ -115,6 +105,18 @@ class CustomersPhones
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedDate()
+    {
+        return $this->createdDate->format('Y-m-d H:i:s');
+    }
+
+    public function setCreatedDate(?\DateTimeInterface $createdDate): self
+    {
+        $this->createdDate = $createdDate;
 
         return $this;
     }
