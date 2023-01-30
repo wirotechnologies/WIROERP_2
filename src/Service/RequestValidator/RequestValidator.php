@@ -13,15 +13,15 @@ class RequestValidator
     }
     public function validateRequestCreateCustomer($dataJson, Request $request)
     {
-        $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice') ?? throw new BadRequestHttpException('400 File Energy Invoice not upload', null, 400);
-        $uploadFileIdentificationDocument = $request->files->get('identificationDocument') ?? throw new BadRequestHttpException('400 File Identification Document not upload', null, 400);
+        // $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice') ?? throw new BadRequestHttpException('400 File Energy Invoice not upload', null, 400);
+        // $uploadFileIdentificationDocument = $request->files->get('identificationDocument') ?? throw new BadRequestHttpException('400 File Identification Document not upload', null, 400);
         
         $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
         $customerType =  $dataJson['customerType'];
         if($customerType == 2){
-            $uploadFileIdentificationDocument = $request->files->get('fileCamaraComercio') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
-            $uploadFileRUT = $request->files->get('fileRUT') ?? throw new BadRequestHttpException('400 File RUT not upload', null, 400);
-            $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
+            // $uploadFileIdentificationDocument = $request->files->get('fileCamaraComercio') ?? throw new BadRequestHttpException('400 File Camara Comercio not upload', null, 400);
+            // $uploadFileRUT = $request->files->get('fileRUT') ?? throw new BadRequestHttpException('400 File RUT not upload', null, 400);
+            // $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
             
             //Obligaciones Tributarias
             $granContribuyente = $dataJson['taxesInformation']['granContribuyente'] ?? throw new BadRequestHttpException('400', null, 400);
@@ -35,16 +35,21 @@ class RequestValidator
             $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];
             if($customerIdentifierType == 2){
                 $dvNit = $dataJson['taxesInformation']['dvNit'] ?? throw new BadRequestHttpException('400', null, 400);
+                if(!is_numeric($dvNit)){
+                    throw new BadRequestHttpException('400', null, 400);
+                }
             }
             
-
             $mainContact = $dataJson['mainContact'] ?? throw new BadRequestHttpException('400', null, 400);
             $contactId = $mainContact['identification']['value'] ?? throw new BadRequestHttpException('400', null, 400);
             $identTypeContact = $mainContact['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
-
+            if(!is_numeric($contactId) or !is_numeric($identTypeContact)){
+                throw new BadRequestHttpException('400', null, 400);
+            }
             $firstNameContact = $mainContact['firstName'] ?? throw new BadRequestHttpException('400', null, 400);;
             $lastNameContact = $mainContact['lastName'] ?? throw new BadRequestHttpException('400', null, 400);
             $emailContact =  $mainContact['email'] ?? throw new BadRequestHttpException('400', null, 400);
+            
         }
         else{
             $firstName = $dataJson['firstName'] ?? throw new BadRequestHttpException('400', null, 400);
@@ -57,12 +62,20 @@ class RequestValidator
         $socioeconomicStatus =  $address['socioeconomicStatus'] ?? throw new BadRequestHttpException('400', null, 400);
 
         $phoneNumbers = $dataJson['phoneNumbers'] ?? throw new BadRequestHttpException('400', null, 400);
+        foreach($phoneNumbers as $phoneNumber){
+            if(!is_numeric($phoneNumber)){
+                throw new BadRequestHttpException('400', null, 400);
+            }
+        }
         $nameCountry = $dataJson['address']['country'] ?? throw new BadRequestHttpException('400', null, 400);
         
         $references = $dataJson['references'] ?? throw new BadRequestHttpException('400', null, 400);
         foreach($references as $reference){
             $fullNameReference = $reference['fullName'] ?? throw new BadRequestHttpException('400', null, 400);
             $phoneReference = $reference['contactPhone'] ?? throw new BadRequestHttpException('400', null, 400);
+            if(!is_numeric($phoneReference)){
+                throw new BadRequestHttpException('400', null, 400);
+            }
         }
         
         return 'OK';

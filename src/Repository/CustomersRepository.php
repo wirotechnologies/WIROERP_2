@@ -10,6 +10,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\CustomerTypesRepository;
 use App\Repository\IdentifierTypesRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 /**
  * @extends ServiceEntityRepository<Customers>
@@ -44,15 +46,16 @@ class CustomersRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($customerId, $customerTypeId, $customerIdentifierType, $dataJson): ?Customers
+    public function create($customerId, $customerTypeId, $customerIdentifierType, $dataJson)
     {
 
         $email = $dataJson['email'];
         $customer = new Customers();
         $identifierType = $this->identifierRepository->find($customerIdentifierType);
         $customerType = $this->customerTRepository->find($customerTypeId);
-        $customer->setPrimaryKeys($customerId, $customerType, $identifierType);
         
+
+        $customer->setPrimaryKeys($customerId, $customerType, $identifierType);
         $date = new \DateTime();
         $customer->setCreatedDate($date);
         $customer->setUpdatedDate($date);

@@ -19,15 +19,16 @@ use App\Repository\CitiesRepository;
 use App\Repository\StatesRepository;
 use App\Repository\CustomersFilesRepository;
 use App\Service\Files\UploadFiles;
-use Doctrine\ORM\EntityManagerInterface;
+//use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
-
+use Symfony\Component\HttpKernel\Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomersController extends AbstractController
 {
@@ -50,38 +51,70 @@ class CustomersController extends AbstractController
         private CustomersReferencesRepository $customerReferencesRepository,
         private CustomersFilesRepository $customerFilesRepository,
         private UploadFiles $uploadFilesService,
-        private EntityManagerInterface $entityManager
+        //private EntityManagerInterface $entityManager
         )
         {}
     
-    public function create(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger) : Response
+    public function create(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, ValidatorInterface $validator) : Response
     {
         $this->logger = $logger;
-        $this->logger->info("ENTRO");
+        $this->logger->info("Request POST CreateCustomer");
         $entityManager = $doctrine->getManager();
         $dataJson = json_decode($request->get('request'), true);
-        $customerId =  $dataJson['identification']["value"] ?? throw new BadRequestHttpException('400', null, 400);
-        $customerType =  $dataJson['customerType'] ?? throw new BadRequestHttpException('400', null, 400);
-        $customerIdentifierType =  $dataJson['identification']['idIdentifierType'] ?? throw new BadRequestHttpException('400', null, 400);
-        $customer = $this->customersRepository->findById($customerId, $customerType, $customerIdentifierType);
+        //$dataJson = json_decode($request->getContent(), true);
+        try{
+            $customerId =  $dataJson['identification']["value"];
+            $customerType =  $dataJson['customerType'];
+            $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];
+            if(!$customerId or !$customerType or !$customerIdentifierType or !$this->identifierRepository->find($customerIdentifierType) or ! $this->customerTRepository->find($customerType)){
+                $this->logger->warning("Error: Incomplete identification number");
+                $response = new JsonResponse(['message' =>'Debe ingresar No. Documento, tipo de cliente y tipo de identificación válidos']);
+                $response->setStatusCode(400);
+                return $response;
+            }
+            $logger->info("Get customer by ids: customerTypes = {$customerType}, identifierTypes = {$customerIdentifierType}, id = {$customerId}");
+            $customer = $this->customersRepository->findById($customerId, $customerType, $customerIdentifierType);
+            
+        }
+        catch(\Exception $e)  {
+            $logger->error($e->getMessage());
+            return new JsonResponse(['message' => 'Error: Verifique que los campos requeridos sean válidos'], 400);
+        }
         if($customer){
-            $this->logger->error("Conflict: Customer already exist");
+            $this->logger->info("Conflict: Customer already exist");
             $response = new JsonResponse();
-            $response->setContent(json_encode(['error'=> 'El cliente ya existe']));
-            //$response->setStatusCode(409);
+            $response->setContent(json_encode(['message'=> 'El cliente ya existe']));
+            $response->setStatusCode(409);
             return $response;
         }
-
         $requestValidator = $this->requestValidatorService->validateRequestCreateCustomer($dataJson, $request);
         $this->logger->info("Request validated successfully");
 
         $customer = $this->customersRepository->create($customerId, $customerType, $customerIdentifierType, $dataJson);
+        $errors = $validator->validate($customer);
+        if (count($errors) > 0) {
+            return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+        }
+
         $entityManager->persist($customer);
+
+       
         $status = $this->statusRepository->find(1); //Status:Activo for create phone, address, files, contacts, references
+        if(!$status){
+            return new JsonResponse(['message' => 'Error inesperado'], 500);
+        }
+
+        
 
         if($customerType == 2){
             //taxesInformation guarda la informacion de obligaciones tributarias del cliente comercial
             $taxesInformation = $this->taxesInformationRepository->create($customer, $dataJson);
+            $errors = $validator->validate($taxesInformation);
+            
+            if (count($errors) > 0) {
+                return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+            }
+            
             $entityManager->persist($taxesInformation);
             
             $mainContact = $dataJson['mainContact'];
@@ -89,61 +122,119 @@ class CustomersController extends AbstractController
             $identTypeContact = $mainContact['identification']['idIdentifierType'];
             
             $contact = $this->contactRepository->findById($contactId,$identTypeContact);
+           
             if(!$contact){
                 $contact = $this->contactRepository->create($dataJson);
+                $errors = $validator->validate($contact);
+                
+                if (count($errors) > 0) {
+                    return new JsonResponse(['message' => 'Error:  Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+                }
                 $entityManager->persist($contact);
             }
             $customerContact = $this->customerContactRepository->create($customer, $contact, $status);
+            $errors = $validator->validate($customerContact);
+                if (count($errors) > 0) {
+                    return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+                }
             $entityManager->persist($customerContact);  
         } 
 
         $customerAddress = $this->customerAddressRepository->create($dataJson, $customer, $status);
+        $errors = $validator->validate($customerAddress);
+        if (count($errors) > 0) {
+            return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+        }
         $entityManager->persist($customerAddress);
-    
+        
+        try{
+            $nameCountry = $dataJson['address']['country'];
+            $country = $this->countryRepository->findOneBy(['name'=>$nameCountry]);
+            $countryPhoneCode = $this->countryPhoneRepository->findOneBy(['countries'=>$country]);
+            if(!$country or !$countryPhoneCode){
+                return new JsonResponse(['message' => 'Error: Verifique que los campos requeridos sean válidos'], 400);
+            }
+        }
+        catch(\Exception $e)  {
+            $logger->error($e->getMessage());
+            return new JsonResponse(['message' => 'Error: Verifique que los campos requeridos sean válidos'], 400);
+        }
         $phoneNumbers = $dataJson['phoneNumbers'];
-        $nameCountry = $dataJson['address']['country'];
-        $country = $this->countryRepository-> findByName($nameCountry);
-        $countryPhoneCode = $this->countryPhoneRepository->findOneByCountry($country);
-
         foreach ($phoneNumbers as $phoneNumber){
-            $number = $this->phoneRepository->findById($phoneNumber, $countryPhoneCode);
+            $number = $this->phoneRepository->findBy(['phoneNumber'=>$phoneNumber]);
             if(!$number){
                 $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
+                $errors = $validator->validate($number);
+                if (count($errors) > 0) {
+                    return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+                }
                 $entityManager->persist($number);
             }
             $customerPhone = $this->customerPhoneRepository->create($number,$customer,$status);
+            $errors = $validator->validate($customerPhone);
+            if (count($errors) > 0) {
+                return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+            }
             $entityManager->persist($customerPhone);
         }
             
         $references = $dataJson['references'];
         foreach($references as $reference){
             $customerReference = $this->customerReferencesRepository->create($reference,$customer,$countryPhoneCode,$status);
+            $errors = $validator->validate($customerReference);
+            if (count($errors) > 0) {
+                return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+            }
             $entityManager->persist($customerReference);
         }
 
         $destination = $this->getParameter('customers_uploads');
         
         $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice');
-        $newFilenameEnergyInvoice = $this->uploadFilesService->upload($uploadFileEnergyInvoice,$destination);
+        try{
+            $newFilenameEnergyInvoice = $this->uploadFilesService->upload($uploadFileEnergyInvoice,$destination);
+        }
+        catch(\Exception $e)  {
+            $logger->error($e->getMessage());
+            return new JsonResponse(['message' => 'Error Inesperado'], 500);
+        }
         $uploadedFileEnergyInvoice = $this->customerFilesRepository->create($newFilenameEnergyInvoice,$customer,$status);
         $uploadedFileEnergyInvoice->setDocumentationType('Factura de Energía');
         $entityManager->persist($uploadedFileEnergyInvoice); 
 
         $uploadFileIdentificationDocument = $request->files->get('identificationDocument');
-        $newFilenameIdentificationDocument = $this->uploadFilesService->upload($uploadFileIdentificationDocument,$destination);
+        try{
+            $newFilenameIdentificationDocument = $this->uploadFilesService->upload($uploadFileIdentificationDocument,$destination);
+        }
+        catch(\Exception $e)  {
+            $logger->error($e->getMessage());
+            return new JsonResponse(['message' => 'Error Inesperado'], 500);
+        }
         $uploadedFileIdentificationDocument = $this->customerFilesRepository->create($newFilenameIdentificationDocument,$customer,$status);
         $uploadedFileIdentificationDocument->setDocumentationType('Documento de Identificación');
         $entityManager->persist($uploadedFileIdentificationDocument); 
 
         if($customerType == 2){
             $uploadFileCamaraComercio = $request->files->get('fileCamaraComercio');
-            $newFilenameCamaraComercio = $this->uploadFilesService->upload($uploadFileCamaraComercio, $destination);
+            try{
+                $newFilenameCamaraComercio = $this->uploadFilesService->upload($uploadFileCamaraComercio, $destination);
+            }
+            catch(\Exception $e)  {
+                $logger->error($e->getMessage());
+                return new JsonResponse(['message' => 'Error Inesperado'], 500);
+            }
             $uploadedFileCamaraComercio = $this->customerFilesRepository->create($newFilenameCamaraComercio,$customer,$status);
             $uploadedFileCamaraComercio->setDocumentationType('Cámara de Comercio');
             $entityManager->persist($uploadedFileCamaraComercio);
 
             $uploadFileRUT = $request->files->get('fileRUT');
-            $newFilenameRUT = $this->uploadFilesService->upload($uploadFileRUT, $destination);
+            try{
+                $newFilenameRUT = $this->uploadFilesService->upload($uploadFileRUT, $destination);
+            }
+            catch(\Exception $e)  {
+                $logger->error($e->getMessage());
+                return new JsonResponse(['message' => 'Error Inesperado'], 500);
+            }
             $uploadedFileRUT = $this->customerFilesRepository->create($newFilenameRUT,$customer,$status);
             $uploadedFileRUT->setDocumentationType('RUT');
             $entityManager->persist($uploadedFileRUT);

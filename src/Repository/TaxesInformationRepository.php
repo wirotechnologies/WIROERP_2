@@ -53,8 +53,11 @@ class TaxesInformationRepository extends ServiceEntityRepository
         $dvNit = isset($dataJson['taxesInformation']['dvNit']) ? $dataJson['taxesInformation']['dvNit'] : Null;
         
         $taxesInformation = new TaxesInformation();
+
         $taxesInformation->setCustomers($customer);
-        $taxesInformation->setDvNit($dvNit);
+        if($customer->getIdentifierTypes()==2){
+            $taxesInformation->setDvNit($dvNit);
+        }
         $taxesInformation->setTypePerson($typePerson);
         $taxesInformation->setGranContribuyente($granContribuyente);
         $taxesInformation->setAutorretenedor($autorretenedor);
@@ -65,6 +68,9 @@ class TaxesInformationRepository extends ServiceEntityRepository
         $taxesInformation->setCreatedDate($date);
         $taxesInformation->setUpdatedDate($date);
         return $taxesInformation;
+      
+        
+       
     }
 
 //    /**

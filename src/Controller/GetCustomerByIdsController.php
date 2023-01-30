@@ -43,7 +43,7 @@ class GetCustomerByIdsController extends AbstractController
 
         }
         return $this->json([
-            'customer' => $customer[0]->getAddress()
+            'customer' => $customer[0]->getBasicInfoAndAddress()
         ]); 
         dd($customer);
         if($customerTypeId == 2){

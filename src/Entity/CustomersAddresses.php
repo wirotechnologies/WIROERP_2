@@ -1,12 +1,8 @@
 <?php
-
 namespace App\Entity;
-
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CustomersAddressesRepository::class)]
 class CustomersAddresses
 {
@@ -17,6 +13,8 @@ class CustomersAddresses
     #[ORM\Column(name:"id", type:"integer", nullable:false)]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Customers::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Customers",inversedBy:"customersAddresses")]
     #[ORM\JoinColumn(name:"customers_id", referencedColumnName:"id")]
@@ -24,6 +22,8 @@ class CustomersAddresses
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private ?Customers $customers;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Cities::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Cities")]
     #[ORM\JoinColumn(name:"cities_id", referencedColumnName:"id")]
@@ -34,20 +34,30 @@ class CustomersAddresses
     #[ORM\JoinColumn(name:"neighborhood_id", referencedColumnName:"id")]
     private ?Neighborhood $neighborhood;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Status::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Status")]
     #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
     private ?Status $status;
 
+    #[Assert\Length(min: 4,max: 12)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 256, nullable: true)]
     private ?string $line1;
 
+    #[Assert\Length(min: 4,max: 12)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $line2 ;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
     private ?string $zipcode ;
 
+    #[Assert\NotNull]
+    #[Assert\Choice(['1','2','3','4','5','6','Comercial'])]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $socioeconomicStatus;
 

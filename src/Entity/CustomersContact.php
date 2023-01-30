@@ -1,13 +1,9 @@
 <?php
-
 namespace App\Entity;
-
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CustomersContactRepository::class)]
-
 
 class CustomersContact
 {
@@ -18,6 +14,8 @@ class CustomersContact
     #[ORM\Column(name:"id", type:"integer", nullable:false)]
     private ?int $id;
     
+    #[Assert\NotBlank]
+    #[Assert\Type(Customers::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Customers")]
     #[ORM\JoinColumn(name:"customers_id", referencedColumnName:"id")]
@@ -25,13 +23,16 @@ class CustomersContact
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private $customers;
 
-
+    #[Assert\NotBlank]
+    #[Assert\Type(Contacts::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Contacts")]
     #[ORM\JoinColumn(name:"contacts_id", referencedColumnName:"id")]
     #[ORM\JoinColumn(name:"contacts_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private  $contacts;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Status::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Status")]
     #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]

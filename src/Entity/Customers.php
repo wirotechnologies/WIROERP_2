@@ -1,27 +1,29 @@
 <?php
-
 namespace App\Entity;
-
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Contraints as Assert;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CustomersRepository::class)]
+
 class Customers
 {
-
+    #[Assert\Length(min: 4,max: 12)]
+    #[Assert\NotBlank]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\Column(name:"id", type:"string", nullable:false)]
     private ?string $id;
 
+    #[Assert\Type(CustomerTypes::class)]
+    #[Assert\NotBlank]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"CustomerTypes")]
     #[ORM\JoinColumn(name:"customer_types_id", referencedColumnName:"id")]
     private $customerTypes;
 
+    #[Assert\Type(IdentifierTypes::class)]
+    #[Assert\NotBlank]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"IdentifierTypes")]
@@ -53,23 +55,36 @@ class Customers
     #[ORM\JoinColumn(name:"customers_references_id", referencedColumnName:"id")]
     private \Doctrine\Common\Collections\Collection $customersReferences;
 
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(type: "string", length: 128, nullable: true)]
     private ?string $commercialName = null;
 
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $firstName = null;
     
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $middleName = null;
 
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $lastName = null;
 
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $secondLastName = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $email = null;
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedDate = null;
@@ -77,7 +92,7 @@ class Customers
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    public function getAddress(){
+    public function getBasicInfoAndAddress(){
         return [
             'id'=> $this->id,
             'customerTypes'=> $this->customerTypes->getId(),

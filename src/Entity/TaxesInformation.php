@@ -5,6 +5,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaxesInformationRepository::class)]
 
@@ -17,7 +18,9 @@ class TaxesInformation
     #[ORM\SecuenceGenerator(sequenceName:"taxes_information_id_seq", allocationSize:1, initialValue:1)]
     #[ORM\Column(name:"id", type:"integer", nullable:false)]
     private ?int $id;
-    
+
+    #[Assert\NotBlank]
+    #[Assert\Type(Customers::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Customers")]
     #[ORM\JoinColumn(name:"customers_id", referencedColumnName:"id")]
@@ -25,27 +28,43 @@ class TaxesInformation
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private $customers;
 
+    #[Assert\Type(type: 'integer')]
+    #[Assert\Length(min: 1,max: 12)]
     #[ORM\Column(type:"integer", nullable:false)]
     private ?int $dvNit;
 
+    #[Assert\NotNull]
+    #[Assert\Choice(['Natural', 'Jurídica'])]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $typePerson = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $granContribuyente = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $autorretenedor = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $agenteDeRetencionIVA = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $regimenSimple = null;
-            
+         
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $impuestoNacionalConsumo = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'boolean')]
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $impuestoSobreVentasIVA = null;
 

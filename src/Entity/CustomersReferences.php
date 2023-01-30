@@ -3,7 +3,7 @@
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CustomersReferencesRepository::class)]
 class CustomersReferences
 {
@@ -14,6 +14,8 @@ class CustomersReferences
     #[ORM\Column(name:"id", type:"integer", nullable:false)]
     private ?int $id=null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Customers::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Customers")]
     #[ORM\JoinColumn(name:"customers_id", referencedColumnName:"id")]
@@ -31,17 +33,27 @@ class CustomersReferences
     #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
     private ?CountriesPhoneCode $referencesCountriesPhoneCode;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(Status::class)]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"Status")]
     #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
     private ?Status $status;
 
+    #[Assert\NotBlank]
+    #[Assert\Choice(['Familiar','Personal','Personal del Representante Legal'])]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $typeReference = null;
 
+    #[Assert\Length(min: 5,max: 50)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $fullName = null;
 
+    #[Assert\Length(min: 7,max: 10)]
+    #[Assert\NotBlank] 
     #[ORM\Column(name:"phone_number", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
     private ?string $phoneNumber;
 

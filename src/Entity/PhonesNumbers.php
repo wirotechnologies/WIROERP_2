@@ -3,21 +3,26 @@
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PhonesNumbersRepository::class)]
 class PhonesNumbers
-{ 
+{
+    #[Assert\Length(min: 7,max: 10)]
+    #[Assert\NotBlank] 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\Column(name:"phone_number", type: Types::DECIMAL, precision: 14, scale: '0', nullable: true)]
     private ?string $phoneNumber;
     
+    #[Assert\NotBlank]
+    #[Assert\Type(CountriesPhoneCode::class)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"CountriesPhoneCode")]
     #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]
     private  $countriesPhoneCode;
-    //?CountriesPhoneCode
+   
+
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;

@@ -6,33 +6,50 @@ use App\Repository\PruebaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ContactsRepository::class)]
 
 class Contacts
 {
+    #[Assert\Length(min: 4,max: 12)]
+    #[Assert\NotBlank]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\Column(name:"id", type:"string", nullable:false, unique:true)]
     private ?string $id;
 
+    #[Assert\Type(IdentifierTypes::class)]
+    #[Assert\NotBlank]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"IdentifierTypes")]
     #[ORM\JoinColumn(name:"identifier_types_id", referencedColumnName:"id")]
     private  $identifierTypes;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $firstName = null;
     
+    
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $middleName = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3,max: 50)]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $lastName = null;
 
+    
+    #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $secondLastName = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $email = null;
 
