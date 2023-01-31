@@ -244,8 +244,8 @@ class CustomersController extends AbstractController
             $uploadedFileRUT->setDocumentationType('RUT');
             $entityManager->persist($uploadedFileRUT);
         }
-
-        //$entityManager->flush(); 
+        
+        $entityManager->flush(); 
         $idCustomer = $customer->getId();
         $response = new JsonResponse();
         $response->setStatusCode(201); 
