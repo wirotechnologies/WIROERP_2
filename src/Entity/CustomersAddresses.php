@@ -47,7 +47,6 @@ class CustomersAddresses
     #[ORM\Column(length: 256, nullable: true)]
     private ?string $line1;
 
-    #[Assert\Length(min: 4,max: 12)]
     #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $line2 ;

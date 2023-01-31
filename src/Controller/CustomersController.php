@@ -60,8 +60,8 @@ class CustomersController extends AbstractController
         $this->logger = $logger;
         $this->logger->info("Request POST CreateCustomer");
         $entityManager = $doctrine->getManager();
-        //$dataJson = json_decode($request->get('request'), true);
-        $dataJson = json_decode($request->getContent(), true);
+        $dataJson = json_decode($request->get('request'), true);
+        //$dataJson = json_decode($request->getContent(), true);
         try{
             $customerId =  $dataJson['identification']["value"];
             $customerType =  $dataJson['customerType'];
@@ -105,7 +105,6 @@ class CustomersController extends AbstractController
         }
 
         
-
         if($customerType == 2){
             //taxesInformation guarda la informacion de obligaciones tributarias del cliente comercial
             $taxesInformation = $this->taxesInformationRepository->create($customer, $dataJson);
@@ -193,7 +192,7 @@ class CustomersController extends AbstractController
             $entityManager->persist($customerReference);
         }
         $this->logger->info("validator references pass");
-        
+
         $destination = $this->getParameter('customers_uploads');
         
         $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice');
@@ -246,7 +245,7 @@ class CustomersController extends AbstractController
             $entityManager->persist($uploadedFileRUT);
         }
 
-        $entityManager->flush(); 
+        //$entityManager->flush(); 
         $idCustomer = $customer->getId();
         $response = new JsonResponse();
         $response->setStatusCode(201); 

@@ -46,7 +46,7 @@ class CustomersReferences
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $typeReference = null;
 
-    #[Assert\Length(min: 5,max: 50)]
+    #[Assert\Length(min: 3,max: 50)]
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     #[ORM\Column(length: 128, nullable: true)]
