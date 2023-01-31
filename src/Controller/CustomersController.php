@@ -60,8 +60,8 @@ class CustomersController extends AbstractController
         $this->logger = $logger;
         $this->logger->info("Request POST CreateCustomer");
         $entityManager = $doctrine->getManager();
-        $dataJson = json_decode($request->get('request'), true);
-        //$dataJson = json_decode($request->getContent(), true);
+        //$dataJson = json_decode($request->get('request'), true);
+        $dataJson = json_decode($request->getContent(), true);
         try{
             $customerId =  $dataJson['identification']["value"];
             $customerType =  $dataJson['customerType'];
@@ -95,7 +95,7 @@ class CustomersController extends AbstractController
         if (count($errors) > 0) {
             return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
         }
-
+        $this->logger->info("validator customer pass");
         $entityManager->persist($customer);
 
        
@@ -114,7 +114,7 @@ class CustomersController extends AbstractController
             if (count($errors) > 0) {
                 return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
             }
-            
+            $this->logger->info("validator taxesInformation pass");
             $entityManager->persist($taxesInformation);
             
             $mainContact = $dataJson['mainContact'];
@@ -130,13 +130,15 @@ class CustomersController extends AbstractController
                 if (count($errors) > 0) {
                     return new JsonResponse(['message' => 'Error:  Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
                 }
+                $this->logger->info("validator contact pass");
                 $entityManager->persist($contact);
             }
             $customerContact = $this->customerContactRepository->create($customer, $contact, $status);
             $errors = $validator->validate($customerContact);
-                if (count($errors) > 0) {
-                    return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
-                }
+            if (count($errors) > 0) {
+                return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
+            }
+            $this->logger->info("validator customerContact pass");
             $entityManager->persist($customerContact);  
         } 
 
@@ -145,6 +147,7 @@ class CustomersController extends AbstractController
         if (count($errors) > 0) {
             return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
         }
+        $this->logger->info("validator customerAddress pass");
         $entityManager->persist($customerAddress);
         
         try{
@@ -168,6 +171,7 @@ class CustomersController extends AbstractController
                 if (count($errors) > 0) {
                     return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
                 }
+                $this->logger->info("validator number pass");
                 $entityManager->persist($number);
             }
             $customerPhone = $this->customerPhoneRepository->create($number,$customer,$status);
@@ -175,6 +179,7 @@ class CustomersController extends AbstractController
             if (count($errors) > 0) {
                 return new JsonResponse(['message' => 'Error: Verifique que todos los campos requeridos sean suministrados y válidos'], 400);
             }
+            $this->logger->info("validator customerPhone pass");
             $entityManager->persist($customerPhone);
         }
             
@@ -187,7 +192,8 @@ class CustomersController extends AbstractController
             }
             $entityManager->persist($customerReference);
         }
-
+        $this->logger->info("validator references pass");
+        
         $destination = $this->getParameter('customers_uploads');
         
         $uploadFileEnergyInvoice = $request->files->get('fileEnergyInvoice');

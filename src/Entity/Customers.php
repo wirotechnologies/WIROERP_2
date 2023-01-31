@@ -65,7 +65,6 @@ class Customers
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $firstName = null;
     
-    #[Assert\Length(min: 3,max: 50)]
     #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $middleName = null;
@@ -75,7 +74,6 @@ class Customers
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $lastName = null;
 
-    #[Assert\Length(min: 3,max: 50)]
     #[Assert\Type('string')]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $secondLastName = null;
