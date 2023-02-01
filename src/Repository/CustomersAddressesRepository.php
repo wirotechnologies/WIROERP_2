@@ -47,7 +47,7 @@ class CustomersAddressesRepository extends ServiceEntityRepository
         $city = $this->cityRepository->findByName($nameCity);
         $line1 = $address['line1'];
         $line2 = isset($address['line2']) ? $address['line2']:Null;
-        $zipcode = isset($address['zipCode']) ? $address['zipCode']:Null;
+        $zipcode = isset($address['zipCode']) and $address['zipCode'] != "" ? $address['zipCode']:Null;
         $socioeconomicStatus =  $address['socioeconomicStatus'];
         $note = isset($address['note']) ? $address['note']:Null;
         $date = new \DateTime();
