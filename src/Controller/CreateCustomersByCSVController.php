@@ -58,14 +58,19 @@ class CreateCustomersByCSVController extends AbstractController
         $this->logger->info("ENTRO");
         $entityManager = $doctrine->getManager();
         //$csvFile = $request->files->get('csvFile');   
-        $csvFile = '/app/var/storage/customers_basic_information_Enero_12.csv';
+        $csvFile = '/app/var/storage/customers_comercial_Febrero3.csv';
         $csvOpen = fopen($csvFile, "r");
         $row = 1;
         while(($data = fgetcsv($csvOpen,10000, ',')) !== false){ //fgetcvs returns false if ends csv
-            if( $row == 1 or $data[0] == '901155978' or  $data[0] == '9007282963' or  $data[0] == '890324611' or  $data[0] ==  '900590431' or  $data[0] == '9011137248' or  $data[0] == '805019862' or  $data[0] == '16449325'  or  $data[0] == '31998191' or  $data[0] ==  '1144089221' ){
+            // if( $row == 1 or $data[0] == '901155978' or  $data[0] == '9007282963' or  $data[0] == '890324611' or  $data[0] ==  '900590431' or  $data[0] == '9011137248' or  $data[0] == '805019862' or  $data[0] == '16449325'  or  $data[0] == '31998191' or  $data[0] ==  '1144089221' ){
+            //     $row++;
+            //     continue;
+            // }
+            if($row == 1){
                 $row++;
                 continue;
             }
+            
         
 
             // $data = ^ array:12 [
@@ -82,11 +87,10 @@ class CreateCustomersByCSVController extends AbstractController
             //     10 => "line_1"
             //     11 => "number"
             //   ]
-
             $createdDate = $data[9] != "NULL" ? new \DateTime($data[9]): new \DateTime();
             
-            $identifierType = $this->identifierRepository->find(1);
-            $customerType = $this->customerTRepository->find(1);
+            $identifierType = $this->identifierRepository->find(2);
+            $customerType = $this->customerTRepository->find(2);
             $customer = $this->customersRepository->findOneBy(['id'=>$data[0], 'customerTypes'=>$customerType, 'identifierTypes'=>$identifierType]);
             if(!$customer){
                 $governmentId = $data[0];
@@ -95,13 +99,23 @@ class CreateCustomersByCSVController extends AbstractController
                 $lastName = $data[3];
                 $secondLastName = $data[4] != "NULL" ? $data[4] : Null;
                 $email = $data[6] != "NULL" ? $data[6] : Null;
-                
+                $commercialName = $firstName;
+                if($middleName){
+                    $commercialName = $commercialName.' '.$middleName;
+                }
+                if($lastName){
+                    $commercialName = $commercialName.' '.$lastName;
+                }
+                if($secondLastName){
+                    $commercialName = $commercialName.' '.$secondLastName;
+                }
                 $customer = new Customers();
                 $customer->setPrimaryKeys($governmentId, $customerType, $identifierType);
-                $customer->setFirstName($firstName);
-                $customer->setMiddleName($middleName);
-                $customer->setLastName($lastName);
-                $customer->setSecondLastName($secondLastName);
+                $customer->setCommercialName($commercialName);
+                // $customer->setFirstName($firstName);
+                // $customer->setMiddleName($middleName);
+                // $customer->setLastName($lastName);
+                // $customer->setSecondLastName($secondLastName);
                 $customer->setCreatedDate($createdDate);
                 $customer->setUpdatedDate($createdDate);
                 $customer->setEmail($email);
