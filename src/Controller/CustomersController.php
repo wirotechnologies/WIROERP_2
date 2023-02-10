@@ -163,7 +163,7 @@ class CustomersController extends AbstractController
         }
         $phoneNumbers = $dataJson['phoneNumbers'];
         foreach ($phoneNumbers as $phoneNumber){
-            $number = $this->phoneRepository->findBy(['phoneNumber'=>$phoneNumber]);
+            $number = $this->phoneRepository->findOneBy(['phoneNumber'=>$phoneNumber]);
             if(!$number){
                 $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
                 $errors = $validator->validate($number);

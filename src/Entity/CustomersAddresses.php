@@ -41,7 +41,7 @@ class CustomersAddresses
     #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
     private ?Status $status;
 
-    #[Assert\Length(min: 4,max: 12)]
+    #[Assert\Length(min: 4,max: 256)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[ORM\Column(length: 256, nullable: true)]
