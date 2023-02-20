@@ -78,7 +78,6 @@ class Customers
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $secondLastName = null;
 
-    #[Assert\NotBlank]
     #[Assert\Email]
     #[ORM\Column(length: 128, nullable: true)]
     private ?string $email = null;

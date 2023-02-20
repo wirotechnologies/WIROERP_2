@@ -49,7 +49,8 @@ class CustomersRepository extends ServiceEntityRepository
     public function create($customerId, $customerTypeId, $customerIdentifierType, $dataJson)
     {
 
-        $email = $dataJson['email'];
+        $email = isset($dataJson['email']) ? $dataJson['email']:Null ;
+        $email = $dataJson['email'] != "" ? $dataJson['email']: Null;
         $customer = new Customers();
         $identifierType = $this->identifierRepository->find($customerIdentifierType);
         $customerType = $this->customerTRepository->find($customerTypeId);
