@@ -13,6 +13,17 @@ create_customers_by_CVS:
     controller: App\Controller\CreateCustomersByCSVController::createBasicResidentialCustomersByCSV
     methods:    POST     
 
+create_customers_by_CVS_MARZO:
+    path: /v1/customers-csv/marzo
+    controller: App\Controller\CreateCustomersByCSVController::createCVSMarch
+    methods:    POST  
+
+
+create_customers_by_CVS_Appointments:
+    path: /v1/customers-csv/appointments
+    controller: App\Controller\CreateCustomersByCSVController::createCsvAppointments
+    methods:    POST        
+
 update_customers:
     path: /v1/customers
     # the controller value has the format 'controller_class::method_name' 
