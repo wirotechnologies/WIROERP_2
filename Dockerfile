@@ -4,7 +4,7 @@ ARG NGINX_VERSION=1.23.0
 FROM php:${PHP_VERSION}-fpm-alpine AS app_php
 
 ARG WORKDIR=/app
-
+RUN apk add --update linux-headers
 RUN docker-php-source extract \
     && apk add --update --virtual .build-deps autoconf g++ make pcre-dev icu-dev openssl-dev libxml2-dev libmcrypt-dev git libpng-dev \
 # Install pgsql goodness
