@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\CustomerTypesRepository;
 use App\Repository\IdentifierTypesRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * @extends ServiceEntityRepository<Customers>
@@ -215,6 +215,28 @@ class CustomersRepository extends ServiceEntityRepository
            ->getResult()
        ;
    }
+
+   public function getEmails($jsonCustomersIds)
+   {
+    $query = "WITH json_data AS (SELECT CAST(:json AS jsonb) AS data)
+    SELECT c.email
+    FROM json_data, jsonb_array_elements(data->'customersIds') AS ids(clm), customers AS c
+    WHERE CAST(clm->>'customersId' AS VARCHAR) = c.id
+    AND CAST(clm->>'customersCustomerTypesId' AS INTEGER) = c.customer_types_id
+    AND CAST(clm->>'customersIdentifierTypesId' AS INTEGER) = c.identifier_types_id";
+    
+    $rsm = new ResultSetMapping();
+    $rsm->addEntityResult('\App\Entity\Customers', 'c');
+    $rsm->addScalarResult('email', 'email');
+    $rsm->addMetaResult('c', 'customer_types_id', 'customer_types_id');
+    $rsm->addMetaResult('c', 'identifier_types_id', 'identifier_types_id');
+    
+    $emails = $this->getEntityManager()->createNativeQuery($query, $rsm)
+    ->setParameter('json', $jsonCustomersIds)
+    ->getResult();
+    return $emails;
+   }
+
 //    public function findCustomers($dataJson)
 //    {
 //         $expresion = isset($dataJson['expression']) ? $dataJson['expression']:Null;

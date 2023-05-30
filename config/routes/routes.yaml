@@ -55,6 +55,11 @@ retrieve_customers_by_expression:
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression
     methods: GET    
 
+get_emails:    
+    path: /v1/customers/emails
+    controller: App\Controller\GetCustomersEmail::getEmails
+    methods: POST  
+
 get-basic-customer:
     path: v1/customers/basic-customer/{customerTypeId}/{identificationTypeId}/{identificationvalue}
     # the controller value has the format 'controller_class::method_name' 

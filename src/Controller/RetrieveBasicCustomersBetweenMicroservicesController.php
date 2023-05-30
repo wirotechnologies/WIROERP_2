@@ -67,7 +67,7 @@ class RetrieveBasicCustomersBetweenMicroservicesController extends AbstractContr
         ca.id as customers_address_id, ca.customers_customer_types_id as customer_types_id, ca.customers_identifier_types_id as identifier_types_id,
         ca.customers_id as customers_id,
         ca.line1, ca.socioeconomic_status, ca.cities_id, ca.status_id
-        FROM json_data, jsonb_array_elements(data->'customersIds') ids(id), customers c
+        FROM json_data, jsonb_array_elements(data->'customersId') ids(id), customers c
         INNER JOIN customers_addresses ca ON c.id = ca.customers_id
         WHERE ids.id->>'customersId' = c.id";
         $rsm = new ResultSetMapping();
