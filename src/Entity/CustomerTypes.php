@@ -13,6 +13,19 @@ class CustomerTypes
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 128, nullable: true)]
+    public ?string $description = null;
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

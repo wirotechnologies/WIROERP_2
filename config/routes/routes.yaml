@@ -3,6 +3,18 @@ hello:
     controller: App\Controller\HelloController
     methods: GET 
 
+
+get_customer_types:
+    path: /v1/customers/types
+    controller: App\Controller\CustomerTypesController::getCustomerTypes
+    methods:    GET
+
+
+get_identifier_types:
+    path: /v1/customers/identifier-types
+    controller: App\Controller\IdentifierTypesController::getIdentifierTypes
+    methods:    GET
+
 create_customers:
     path: /v1/customers
     controller: App\Controller\CustomersController::create
