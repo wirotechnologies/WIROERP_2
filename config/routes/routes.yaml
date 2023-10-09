@@ -18,7 +18,15 @@ get_identifier_types:
 create_customers:
     path: /v1/customers
     controller: App\Controller\CustomersController::create
-    methods:    POST   
+    methods:    POST
+
+update_customers:
+    path: /v1/customers/{customerTypeId}/{identifierTypeId}/{customerId}
+    controller: App\Controller\CustomersController::update
+    methods:    PUT
+
+
+
 
 create_customers_by_CVS:
     path: /v1/customers-csv
@@ -36,11 +44,7 @@ create_customers_by_CVS_Appointments:
     controller: App\Controller\CreateCustomersByCSVController::createCsvAppointments
     methods:    POST        
 
-update_customers:
-    path: /v1/customers
-    # the controller value has the format 'controller_class::method_name' 
-    controller: App\Controller\CustomersController::update
-    methods:    PUT  
+
 
 retrieve_customers:
     path: /v1/retrieveCustomers

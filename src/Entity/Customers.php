@@ -55,6 +55,21 @@ class Customers
     #[ORM\JoinColumn(name:"customers_references_id", referencedColumnName:"id")]
     private \Doctrine\Common\Collections\Collection $customersReferences;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\OneToMany(targetEntity:"CustomersFiles",mappedBy:"customers")]
+    #[ORM\JoinColumn(name:"customers_files_id", referencedColumnName:"id")]
+    private \Doctrine\Common\Collections\Collection $customersFiles;
+
+    public function getCustomersFiles(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->customersFiles;
+    }
+
+    public function getCustomersReferences(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->customersReferences;
+    }
+
     #[Assert\Length(min: 3,max: 50)]
     #[Assert\Type('string')]
     #[ORM\Column(type: "string", length: 128, nullable: true)]
@@ -254,7 +269,7 @@ class Customers
 
     public function getCustomerTypes()//: //?CustomerTypes
     {
-        return $this->customerTypes->getId();
+        return $this->customerTypes;
     }
 
     public function setCustomerTypes(?CustomerTypes $customerTypes): self
@@ -266,7 +281,7 @@ class Customers
 
     public function getIdentifierTypes()//: ?IdentifierTypes
     {
-        return $this->identifierTypes->getId();
+        return $this->identifierTypes;
     }
 
     public function setIdentifierTypes(?IdentifierTypes $identifierTypes): self

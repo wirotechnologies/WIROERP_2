@@ -27,7 +27,6 @@ class CustomersReferences
     #[ORM\ManyToOne(targetEntity:"IdentifierTypes")]
     #[ORM\JoinColumn(name:"identifier_types_id", referencedColumnName:"id")]
     private ?IdentifierTypes $referencesIdentifierTypes;
-
     #[ORM\GeneratedValue(strategy:"NONE")]
     #[ORM\ManyToOne(targetEntity:"CountriesPhoneCode")]
     #[ORM\JoinColumn(name:"countries_phone_code_id", referencedColumnName:"id")]

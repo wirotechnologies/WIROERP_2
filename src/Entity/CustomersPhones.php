@@ -80,7 +80,7 @@ class CustomersPhones
      */ 
     public function getPhonesNumber()
     {
-        return $this->phonesNumber->getPhoneNumber();
+        return $this->phonesNumber;
     }
 
     /**
@@ -100,7 +100,7 @@ class CustomersPhones
      */ 
     public function getStatus()
     {
-        return $this->status->getStatus();
+        return $this->status;
     }
 
     /**

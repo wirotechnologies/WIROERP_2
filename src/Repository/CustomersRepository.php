@@ -223,7 +223,8 @@ class CustomersRepository extends ServiceEntityRepository
     FROM json_data, jsonb_array_elements(data->'customersIds') AS ids(clm), customers AS c
     WHERE CAST(clm->>'customersId' AS VARCHAR) = c.id
     AND CAST(clm->>'customersCustomerTypesId' AS INTEGER) = c.customer_types_id
-    AND CAST(clm->>'customersIdentifierTypesId' AS INTEGER) = c.identifier_types_id";
+    AND CAST(clm->>'customersIdentifierTypesId' AS INTEGER) = c.identifier_types_id
+    AND c.email IS NOT NULL";
     
     $rsm = new ResultSetMapping();
     $rsm->addEntityResult('\App\Entity\Customers', 'c');

@@ -155,7 +155,7 @@ class CustomersAddresses
 
     public function getCities()
     {
-        return $this->cities->getName();
+        return $this->cities;
     }
 
     public function setCities(?Cities $cities): self
@@ -193,7 +193,7 @@ class CustomersAddresses
      */ 
     public function getStatus()
     {
-        return $this->status->getStatus();
+        return $this->status;
     }
 
     /**

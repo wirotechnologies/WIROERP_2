@@ -73,7 +73,7 @@ class CustomersContact
      */ 
     public function getStatus()
     {
-        return $this->status->getStatus();
+        return $this->status;
     }
 
     /**

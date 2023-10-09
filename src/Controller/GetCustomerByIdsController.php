@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class GetCustomerByIdsController extends AbstractController
 {
@@ -32,16 +34,39 @@ class GetCustomerByIdsController extends AbstractController
         )
     {}
 
-    public function getCustomerByIds(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $customerTypeId, int $identificationTypeId, int $identificationvalue) : Response
+    public function getCustomerByIds(SerializerInterface $serializer,LoggerInterface $logger, int $customerTypeId, int $identificationTypeId, int $identificationvalue) : Response
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
-        $entityManager = $doctrine->getManager();
-
         $customer = $this->customersRepository->findBy(['id'=>$identificationvalue, 'customerTypes'=>$customerTypeId, 'identifierTypes'=>$identificationTypeId]);
         if(!$customer){
-
+            return $this->json(['message'=>'No se encontró el cliente'],404);
         }
+        $customer = $serializer->normalize(
+            $customer,
+            'json',
+            [AbstractNormalizer::ATTRIBUTES=>[
+                'id',
+                'customerTypes'=>['id','description'],
+                'identifierTypes'=>['id','identifierName'],
+                'customersAddresses'=>['id','cities'=>['id','name','states'=>['id','name','countries'=>['id','name']]],'status'=>['id','status'],'line1','line2','zipcode','socioeconomicStatus','note'],
+                'customersPhones'=>['id','phonesNumber'=>['phoneNumber','countriesPhoneCode'=>['id','code','countries'=>['id','name']]],'status'=>['id','status']],
+                'customersContacts'=>['id','contacts','status'=>['id','status']],
+                'taxesInformation'=>['id','dvNit','typePerson','granContribuyente','autorretenedor','agenteDeRetencionIVA','regimenSimple','impuestoNacionalConsumo','impuestoSobreVentasIVA'],
+                'customersReferences'=>['id','fullName','typeReference','phoneNumber'],
+                'customersFiles'=>['id','status'=>['id','status'],'fileName','documentationType'],
+                'commercialName',
+                'firstName',
+                'middleName',
+                'lastName',
+                'secondLastName',
+                'email'
+
+            ]]
+        );
+        return $this->json(['customer'=>$customer]);
+
+
         return $this->json([
             'customer' => $customer[0]->getBasicInfoAndAddress()
         ]); 

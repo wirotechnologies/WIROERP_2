@@ -4,6 +4,8 @@ namespace App\Service\RequestValidator;
 use App\Repository\ContactsRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\Validator\Constraints as Assert;
 class RequestValidator
 {
     public function __construct(
@@ -115,6 +117,34 @@ class RequestValidator
         }
 
         return 'OK';
+    }
+
+    public function validateUpdateCustomer($dataJson)
+    {
+        $constraint =
+            new Assert\Collection([
+                    'addressService' => new Assert\Optional(new Assert\Length(min: 1)),
+                    'socioeconomicStatusService' => new Assert\Optional([new Assert\Choice(
+                        ['1','2','3','4','5','6','Comercial'])
+                    ]),
+                    'neighborhoodId' => new Assert\Optional([new Assert\Type('integer')]),
+                    'dueDay' => new Assert\Optional([new Assert\Type('integer')]),
+                    'cutOffDay' => new Assert\Optional([new Assert\Type('integer')]),
+                    'expirationDate' =>  new Assert\Optional([new Assert\Date()]),
+                    'startDate' => new Assert\Optional([new Assert\Date()]),
+                    'note' => new Assert\Optional([new Assert\Length(min: 2,max: 50) ]),
+                    'dianInvoice' => new Assert\Optional([ new Assert\Type('boolean')])
+                ]
+                ,null,null,true);
+        $violations = $this->validator->validate($dataJson, $constraint);
+
+        if(count($violations)>0){
+            $exception = new BadRequestHttpException('Verifique que todos los campos requeridos sean válidos');
+            $exception =  FlattenException::create($exception);
+            $errorsString = (string) $violations;
+            $this->logger->error("BadRequestErrorUpdateContract: validator = {$errorsString}");
+            return $exception;
+        }
     }
 
     public function validateRequestRetrieveCustomers($request)
