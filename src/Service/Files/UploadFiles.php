@@ -20,32 +20,23 @@ class UploadFiles
     public function upload(File $file, $destination) 
     {
         if($file){
-            
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = Urlizer::urlize($originalFilename,$separator = '_').'_'.uniqid().'.'.$file->guessExtension();
             $stream = fopen($file->getPathname(), 'r');
             $uploadFile = $this->filesystem->writeStream($newFilename, $stream);
-            
             if (is_resource($stream)) {
                 fclose($stream);
             }
-
             return $newFilename;
         }
-
     }
 
 
-    public function getFile($file)
-    {    
-        $response = new StreamedResponse(function() use($file){
-            $filePath = $file->getFileName();
-            $outputStream = fopen('php://output', 'wb');
-            $contents = $this->filesystem->readStream($filePath);
-            stream_copy_to_stream($contents, $outputStream);
-        });
-        $response->headers->set('Content-Type', 'multipart/form-data');
-        return $response;
-
+    public function getFile($filePath)
+    {
+        $outputStream = fopen('php://output', 'wb');
+        $contents = $this->filesystem->readStream($filePath);
+        stream_copy_to_stream($contents, $outputStream);
+        return $outputStream;
     }
 }

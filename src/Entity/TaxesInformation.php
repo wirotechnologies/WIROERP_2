@@ -28,6 +28,11 @@ class TaxesInformation
     #[ORM\JoinColumn(name:"customers_identifier_types_id", referencedColumnName:"identifier_types_id")]
     private $customers;
 
+    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\ManyToOne(targetEntity:"TaxesTypePerson")]
+    #[ORM\JoinColumn(name:"taxes_type_person_id", referencedColumnName:"id")]
+    private ?TaxesTypePerson $taxesTypePerson;
+
     #[Assert\Type(type: 'integer')]
     #[Assert\Length(min: 1,max: 12)]
     #[ORM\Column(type:"integer", nullable:false)]
@@ -77,6 +82,16 @@ class TaxesInformation
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTaxesTypePerson(): ?TaxesTypePerson
+    {
+        return $this->taxesTypePerson;
+    }
+
+    public function setTaxesTypePerson(?TaxesTypePerson $taxesTypePerson): void
+    {
+        $this->taxesTypePerson = $taxesTypePerson;
     }
 
     public function getDvNit(): ?int

@@ -3,16 +3,19 @@ hello:
     controller: App\Controller\HelloController
     methods: GET 
 
-
 get_customer_types:
     path: /v1/customers/types
     controller: App\Controller\CustomerTypesController::getCustomerTypes
     methods:    GET
 
-
 get_identifier_types:
     path: /v1/customers/identifier-types
     controller: App\Controller\IdentifierTypesController::getIdentifierTypes
+    methods:    GET
+
+get_taxes_types_person:
+    path: /v1/customers/taxes-types-person
+    controller: App\Controller\TaxesTypesPersonController::getTypesPerson
     methods:    GET
 
 create_customers:
@@ -24,6 +27,20 @@ update_customers:
     path: /v1/customers/{customerTypeId}/{identifierTypeId}/{customerId}
     controller: App\Controller\CustomersController::update
     methods:    PUT
+
+get_emails:
+    path: /v1/customers/emails
+    controller: App\Controller\GetCustomersEmail::getEmails
+    methods: POST
+
+get_customer_file:
+    path: v1/customers/files/{customerFileId}
+    controller: App\Controller\GetCustomerFileByCustomerFileIdController::getFileByCustomerFileId
+    methods:    GET
+
+
+
+
 
 
 
@@ -69,23 +86,23 @@ retrieve_basic_customers_by_expression:
 retrieve_customers_by_expression:
     path: /v1/retrievecustomer/expression
     controller: App\Controller\ExrpressionRetrieveCustomersController::retrieveCustomersByExpression
-    methods: GET    
+    methods: GET
 
-get_emails:    
-    path: /v1/customers/emails
-    controller: App\Controller\GetCustomersEmail::getEmails
-    methods: POST  
+
+get_customer_by_ids:
+    path: v1/customers/{customerTypeId}/{identifierTypeId}/{customerId}
+    controller: App\Controller\GetCustomerByIdsController::getCustomerByIds
+    methods:    GET
 
 get-basic-customer:
     path: v1/customers/basic-customer/{customerTypeId}/{identificationTypeId}/{identificationvalue}
-    # the controller value has the format 'controller_class::method_name' 
     controller: App\Controller\GetCustomerBasicInfoByIdsController::getCustomerByIds
     methods:    GET        
 
-get_customer:
-    path: v1/customers/{customerTypeId}/{identificationTypeId}/{identificationvalue}
+#get_customer:
+    #path: v1/customers/{customerTypeId}/{identificationTypeId}/{identificationvalue}
     # the controller value has the format 'controller_class::method_name' 
-    controller: App\Controller\GetCustomerByIdsController::getCustomerByIds
-    methods:    GET    
+    #controller: App\Controller\GetCustomerByIdsController::getCustomerByIds
+    #methods:    GET
 
     
