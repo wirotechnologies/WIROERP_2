@@ -20,7 +20,7 @@ class GetCustomerByIdsController extends AbstractController
     {
         $this->logger = $logger;
         $this->logger->info("ENTRO");
-        $customer = $this->customersRepository->findBy(['id'=>$customerId, 'customerTypes'=>$customerTypeId, 'identifierTypes'=>$identifierTypeId]);
+        $customer = $this->customersRepository->findOneBy(['id'=>$customerId, 'customerTypes'=>$customerTypeId, 'identifierTypes'=>$identifierTypeId]);
         if(!$customer){
             return $this->json(['message'=>'No se encontró el cliente'],404);
         }
