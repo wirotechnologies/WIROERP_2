@@ -28,6 +28,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomersController extends AbstractController
@@ -253,116 +255,6 @@ class CustomersController extends AbstractController
         return $response;
         
 
-    }
-
-
-    public function update(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger) : Response
-    {
-        $this->logger = $logger;
-        $this->logger->info("ENTRO");
-        $entityManager = $doctrine->getManager();
-        $dataJson = json_decode($request->getContent(), true);
-        $requestValidator = $this->requestValidatorService->validateRequestUpdateCustomer($dataJson);
-        $customerId=  $dataJson['identification']["value"];
-        $customerType=  $dataJson['customerType'];
-        $customerIdentifierType =  $dataJson['identification']['idIdentifierType'];
-        
-        $customer = $this->customersRepository->findById($customerId,$customerType,$customerIdentifierType);
-        
-        if(!$customer){
-            $this->logger->error('Customer not exist');
-            $response = new JsonResponse();
-            $response->setContent(json_encode(['error'=> 'El cliente no existe']));
-            //$response->setStatusCode(404);
-            return $response;
-        }
-
-        $customer = $this->customersRepository->update($customer, $dataJson);
-        $entityManager->persist($customer);
-        $mainContact = isset($dataJson['mainContact']) ? $dataJson['mainContact']:Null;
-        if($customerType == 2 and !is_null($mainContact)){
-            $contactId = $mainContact['identification']['value'];
-            $identTypeContact = $mainContact['identification']['idIdentifierType'];
-            $contact = $this->contactRepository->findById($contactId, $identTypeContact);
-            if($contact == Null){
-                $contact = $this->contactRepository->create($dataJson);
-                $entityManager->persist($contact);
-                $customerContact = $this->customerContactRepository->create($customer, $contact);
-                $entityManager->persist($customerContact);  
-            }
-            else{
-                $contact = $this->contactRepository->update($dataJson, $contact);
-                $entityManager->persist($contact);
-            } 
-        }
-
-        $address =isset($dataJson['address']) ? $dataJson['address']:Null;
-        if(!is_null($address)){
-            $customerAddress = $this->customerAddressRepository->findOneByCustomer($customer);
-            $customerAddress = $this->customerAddressRepository->update($dataJson, $customerAddress);
-            $entityManager->persist($customerAddress);  
-        } 
-
-        $phoneNumbers = isset($dataJson['phoneNumbers']) ? $dataJson['phoneNumbers']:Null;
-        $customerAddressForCountry = $this->customerAddressRepository->findOneByCustomer($customer);
-        $nameCountry = $customerAddressForCountry->getCities()->getStates()->getCountries()->getName();
-        $country = $this->countryRepository->findByName($nameCountry);
-        $countryPhoneCode = $this->countryPhoneRepository->findOneByCountry($country);
-        
-        if(!is_null($phoneNumbers)){
-            foreach ($phoneNumbers as $phoneNumber){
-                $number = $this->phoneRepository->findById($phoneNumber, $countryPhoneCode);
-                
-                if(is_null($number)){
-                    $number = $this->phoneRepository->create($phoneNumber, $countryPhoneCode);
-                    $entityManager->persist($number);
-                    $newCustomerPhone = $this->customerPhoneRepository->create($number, $customer);
-                    $entityManager->persist($newCustomerPhone);
-                    continue;
-                }
-                else{
-                    $newCustomerPhone = Null;
-                    
-                    $customerPhones =  $this->customerPhoneRepository->findByCustomer($customer);
-                    foreach($customerPhones as $customerPhone){
-                        if($customerPhone->getPhonesNumber()==$number){
-                            $newCustomerPhone = $customerPhone;
-                            break;
-                        }
-                    }
-                    if($newCustomerPhone == Null){
-                        $newCustomerPhone = $this->customerPhoneRepository->create($number, $customer);
-                        $entityManager->persist($newCustomerPhone);
-                    }
-                }
-            }
-        }    
-  
-        $references = $dataJson['references'] ? $dataJson['references']:Null;
-        
-        
-        if(!is_null($references)){
-            $customerReferences = $this->customerReferencesRepository->findByCustomer($customer);
-            foreach($references as $reference){
-                $newCustomerReference = Null;
-                foreach($customerReferences as $customerReference){
-                    if(($customerReference->getFullName()==$reference['fullName']) and ($customerReference->getPhoneNumber()==$reference['contactPhone'])){
-                        $newCustomerReference = $customerReference;
-                        continue 1;
-                    }
-                }     
-            if($newCustomerReference == Null){
-                $newCustomerReference = $this->customerReferencesRepository->create($reference, $customer, $countryPhoneCode);
-                $entityManager->persist($newCustomerReference);
-            }  
-            }
-        }
-
-        $entityManager->flush();  
-        $idCustomer = $customer->getId();
-        $response = new JsonResponse();
-        $response->setContent(json_encode(['updatedCustomer' => $idCustomer])) ;
-        return $response;
     }
 }      
     

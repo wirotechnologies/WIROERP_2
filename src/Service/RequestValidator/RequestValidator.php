@@ -2,14 +2,19 @@
 
 namespace App\Service\RequestValidator;
 use App\Repository\ContactsRepository;
+use phpDocumentor\Reflection\DocBlock\Tags\Formatter\AlignFormatter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
 class RequestValidator
 {
     public function __construct(
-        private ContactsRepository $contactRepository
+        private ContactsRepository $contactRepository,
+        private ValidatorInterface $validator,
+        private LoggerInterface $logger
     )
     {
     }
@@ -119,32 +124,77 @@ class RequestValidator
         return 'OK';
     }
 
-    public function validateUpdateCustomer($dataJson)
+    public function validateUpdateCustomer($request)
     {
-        $constraint =
+        $requestData = $request->get('request') ?? null;
+        if($requestData){
+            $dataJson = json_decode($requestData,true) ?? null;
+            $constraint =
             new Assert\Collection([
-                    'addressService' => new Assert\Optional(new Assert\Length(min: 1)),
-                    'socioeconomicStatusService' => new Assert\Optional([new Assert\Choice(
-                        ['1','2','3','4','5','6','Comercial'])
-                    ]),
-                    'neighborhoodId' => new Assert\Optional([new Assert\Type('integer')]),
-                    'dueDay' => new Assert\Optional([new Assert\Type('integer')]),
-                    'cutOffDay' => new Assert\Optional([new Assert\Type('integer')]),
-                    'expirationDate' =>  new Assert\Optional([new Assert\Date()]),
-                    'startDate' => new Assert\Optional([new Assert\Date()]),
-                    'note' => new Assert\Optional([new Assert\Length(min: 2,max: 50) ]),
-                    'dianInvoice' => new Assert\Optional([ new Assert\Type('boolean')])
-                ]
-                ,null,null,true);
-        $violations = $this->validator->validate($dataJson, $constraint);
+                'middleName' => new Assert\Optional(),
+                'secondLastName' => new Assert\Optional(),
+                'email' => new Assert\Optional(),
+                'phoneNumbers' => new Assert\Optional(new Assert\All([new Assert\Type('numeric')])),
+                'address' => new Assert\Optional(new Assert\Collection([
+                    'cityId' => [new Assert\NotBlank(),new Assert\Type('integer')],
+                    'line1' => [new Assert\NotBlank(),new Assert\Length(max:256)],
+                    'line2' => [new Assert\NotBlank(),new Assert\Length(max:128)],
+                    'note' => [new Assert\NotBlank(),new Assert\Length(max:256)],
+                    'zipcode' => [new Assert\NotBlank(),],
+                    'socioeconomicStatus' => [new Assert\NotBlank(),new Assert\Choice(['1','2','3','4','5','6','Comercial'])]
+                ])),
+                'references' => new Assert\Optional(new Assert\Collection([
+                    'fullName'=> [new Assert\NotBlank(),new Assert\Length(max:256)],
+                    'phoneNumber' => [new Assert\NotBlank(),new Assert\Type('numeric')],
+                    'typeReference' => [new Assert\NotBlank(),new Assert\Choice(['Personal del Representante Legal','Personal','Familiar'])]
+                ])),
+                'mainContact' => new Assert\Optional(new Assert\Collection([
+                    'firstName' => [new Assert\NotBlank(),new Assert\Length(max:128)],
+                    'middleName' => new Assert\Optional([new Assert\NotBlank(),new Assert\Length(max:128)]),
+                    'lastName' => [new Assert\NotBlank(),new Assert\Length(max:128)],
+                    'secondLastName' => new Assert\Optional([new Assert\NotBlank(),new Assert\Length(max:128)]),
+                    'email' => [new Assert\NotBlank(),new Assert\Email()],
+                ])),
+                'taxesInformation' => new Assert\Optional(new Assert\Collection([
+                    'granContribuyente' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'autorretenedor' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'agenteRetencionIVA' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'regimenSimpleTributacion' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'impuestoNacionalConsumo' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'impuestoSobreVentas' => new Assert\Optional([new Assert\Type('boolean')]),
+                    'taxTypePersonId' => new Assert\Optional([new Assert\NotBlank(),new Assert\Type('integer')]),
+                    'dvNit' => new Assert\Optional([new Assert\Type('integer')])
+                ]))
+            ],null,null,true);
+
+            $violations = $this->validator->validate($dataJson, $constraint);
+
+            if(count($violations)>0){
+                $exception = new BadRequestHttpException('Verifique que todos los campos requeridos sean válidos');
+                $exception =  FlattenException::create($exception);
+                $errorsString = (string) $violations;
+                $this->logger->error("BadRequestErrorUpdateContract: validator = {$errorsString}");
+                return $exception;
+            }
+        }
+        
+        $constraint = new Assert\Collection([
+            'fileEnergyInvoice' => new Assert\Optional(new Assert\File(maxSize: '2M',mimeTypes: ['application/pdf','image/png','image/jpeg','application/msword'])),
+            'identificationDocument'  => new Assert\Optional(new Assert\File(maxSize: '2M',mimeTypes: ['application/pdf','image/png','image/jpeg','application/msword'])),
+            'fileCamaraComercio'  => new Assert\Optional(new Assert\File(maxSize: '2M',mimeTypes: ['application/pdf','image/png','image/jpeg','application/msword'])),
+            'fileRUT'  => new Assert\Optional(new Assert\File(maxSize: '2M',mimeTypes: ['application/pdf','image/png','image/jpeg','application/msword'])),
+        ],null,null,true);
+        $violations = $this->validator->validate($request->files->all(), $constraint);
 
         if(count($violations)>0){
-            $exception = new BadRequestHttpException('Verifique que todos los campos requeridos sean válidos');
+            $exception = new BadRequestHttpException('Verifique que los archivos sean válidos');
             $exception =  FlattenException::create($exception);
             $errorsString = (string) $violations;
             $this->logger->error("BadRequestErrorUpdateContract: validator = {$errorsString}");
             return $exception;
         }
+        
+        return null;
     }
 
     public function validateRequestRetrieveCustomers($request)

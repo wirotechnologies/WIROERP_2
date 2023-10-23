@@ -34,7 +34,7 @@ class GetCustomerByIdsController extends AbstractController
                 'customersAddresses'=>['id','cities'=>['id','name','states'=>['id','name','countries'=>['id','name']]],'status'=>['id','status'],'line1','line2','zipcode','socioeconomicStatus','note'],
                 'customersPhones'=>['id','phonesNumber'=>['phoneNumber','countriesPhoneCode'=>['id','code','countries'=>['id','name']]],'status'=>['id','status']],
                 'customersContacts'=>['id','contacts','status'=>['id','status']],
-                'taxesInformation'=>['id','taxesTypePerson'=>['id','typePerson'],'dvNit','typePerson','granContribuyente','autorretenedor','agenteDeRetencionIVA','regimenSimple','impuestoNacionalConsumo','impuestoSobreVentasIVA'],
+                'taxesInformation'=>['id','taxesTypePerson'=>['id','typePerson'],'dvNit','granContribuyente','autorretenedor','agenteDeRetencionIVA','regimenSimple','impuestoNacionalConsumo','impuestoSobreVentasIVA'],
                 'customersReferences'=>['id','fullName','typeReference','phoneNumber'],
                 'customersFiles'=>['id','status'=>['id','status'],'fileName','documentationType'],
                 'commercialName',

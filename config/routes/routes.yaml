@@ -18,40 +18,30 @@ get_taxes_types_person:
     controller: App\Controller\TaxesTypesPersonController::getTypesPerson
     methods:    GET
 
-#### ----- Countries ----------- ########
 api_get_countries:
     path:       v1/customers/countries
     controller: App\Controller\CountriesController::getCountries
     methods:    GET
 
-#### ----- Countries ----------- ########
-
-
-#### ----- States ----------- ########
 api_get_states_by_country:
     path:       v1/customers/countries/{countryId}/states
     controller: App\Controller\StatesController::getStatesByCountryId
     methods:    GET
 
-#### ----- States ----------- ########
-
-#### ----- Cities ----------- ########
 api_get_cities_by_state:
     path:       v1/customers/states/{stateId}/cities
     controller: App\Controller\CitiesController::getCitiesByStateId
     methods:    GET
-
-#### ----- Cities ----------- ########
 
 create_customers:
     path: /v1/customers
     controller: App\Controller\CustomersController::create
     methods:    POST
 
-update_customers:
+update_customer:
     path: /v1/customers/{customerTypeId}/{identifierTypeId}/{customerId}
-    controller: App\Controller\CustomersController::update
-    methods:    PUT
+    controller: App\Controller\UpdateCustomerByIdController::updateCustomerById
+    methods:    POST
 
 get_emails:
     path: /v1/customers/emails
