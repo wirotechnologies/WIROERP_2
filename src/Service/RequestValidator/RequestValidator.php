@@ -131,16 +131,14 @@ class RequestValidator
             $dataJson = json_decode($requestData,true) ?? null;
             $constraint =
             new Assert\Collection([
-                'middleName' => new Assert\Optional(),
-                'secondLastName' => new Assert\Optional(),
-                'email' => new Assert\Optional(),
+                'email' => new Assert\Optional([new Assert\NotBlank(),new Assert\Email()]),
                 'phoneNumbers' => new Assert\Optional(new Assert\All([new Assert\Type('numeric')])),
                 'address' => new Assert\Optional(new Assert\Collection([
                     'cityId' => [new Assert\NotBlank(),new Assert\Type('integer')],
                     'line1' => [new Assert\NotBlank(),new Assert\Length(max:256)],
-                    'line2' => [new Assert\NotBlank(),new Assert\Length(max:128)],
-                    'note' => [new Assert\NotBlank(),new Assert\Length(max:256)],
-                    'zipcode' => [new Assert\NotBlank(),],
+                    'line2' => new Assert\Optional([new Assert\NotBlank(),new Assert\Length(max:128)]),
+                    'note' => new Assert\Optional([new Assert\NotBlank(),new Assert\Length(max:256)]),
+                    'zipcode' => new Assert\Optional([new Assert\NotBlank()]),
                     'socioeconomicStatus' => [new Assert\NotBlank(),new Assert\Choice(['1','2','3','4','5','6','Comercial'])]
                 ])),
                 'references' => new Assert\Optional(new Assert\Collection([
@@ -149,6 +147,8 @@ class RequestValidator
                     'typeReference' => [new Assert\NotBlank(),new Assert\Choice(['Personal del Representante Legal','Personal','Familiar'])]
                 ])),
                 'mainContact' => new Assert\Optional(new Assert\Collection([
+                    'identifierTypeId' => [new Assert\NotBlank(),new Assert\Type('integer')],
+                    'contactId' => [new Assert\NotBlank(),new Assert\Type('string')],
                     'firstName' => [new Assert\NotBlank(),new Assert\Length(max:128)],
                     'middleName' => new Assert\Optional([new Assert\NotBlank(),new Assert\Length(max:128)]),
                     'lastName' => [new Assert\NotBlank(),new Assert\Length(max:128)],
@@ -156,14 +156,14 @@ class RequestValidator
                     'email' => [new Assert\NotBlank(),new Assert\Email()],
                 ])),
                 'taxesInformation' => new Assert\Optional(new Assert\Collection([
-                    'granContribuyente' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'autorretenedor' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'agenteRetencionIVA' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'regimenSimpleTributacion' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'impuestoNacionalConsumo' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'impuestoSobreVentas' => new Assert\Optional([new Assert\Type('boolean')]),
-                    'taxTypePersonId' => new Assert\Optional([new Assert\NotBlank(),new Assert\Type('integer')]),
-                    'dvNit' => new Assert\Optional([new Assert\Type('integer')])
+                    'granContribuyente' => [new Assert\Type('boolean')],
+                    'autorretenedor' => [new Assert\Type('boolean')],
+                    'agenteRetencionIVA' => [new Assert\Type('boolean')],
+                    'regimenSimpleTributacion' => [new Assert\Type('boolean')],
+                    'impuestoNacionalConsumo' => [new Assert\Type('boolean')],
+                    'impuestoSobreVentas' => [new Assert\Type('boolean')],
+                    'taxTypePersonId' => [new Assert\NotBlank(),new Assert\Type('integer')],
+                    'dvNit' => [new Assert\Type('integer')]
                 ]))
             ],null,null,true);
 
@@ -193,7 +193,7 @@ class RequestValidator
             $this->logger->error("BadRequestErrorUpdateContract: validator = {$errorsString}");
             return $exception;
         }
-        
+
         return null;
     }
 

@@ -68,9 +68,54 @@ class TaxesInformationRepository extends ServiceEntityRepository
         $taxesInformation->setCreatedDate($date);
         $taxesInformation->setUpdatedDate($date);
         return $taxesInformation;
-      
-        
-       
+    }
+
+    public function createTaxesInformation($taxesInformation,$taxTypePerson,$customer){
+
+        $granContribuyente = $taxesInformation['granContribuyente'] ?? null;
+        $autorretenedor = $taxesInformation['autorretenedor'] ?? null;
+        $agenteRetencionIVA = $taxesInformation['agenteRetencionIVA'] ?? null;
+        $regimenSimpleTributacion = $taxesInformation['regimenSimpleTributacion'] ?? null;
+        $impuestoNacionalConsumo = $taxesInformation['impuestoNacionalConsumo'] ?? null;
+        $impuestoSobreVentas = $taxesInformation['impuestoSobreVentas'] ?? null;
+        $dvNit = $taxesInformation['dvNit'] ?? null;
+        $date = new \DateTime();
+        $taxesInformation = new TaxesInformation();
+        $taxesInformation->setCustomers($customer);
+        $taxesInformation->setTaxesTypePerson($taxTypePerson);
+        $taxesInformation->setDvNit($dvNit);
+        $taxesInformation->setGranContribuyente($granContribuyente);
+        $taxesInformation->setAutorretenedor($autorretenedor);
+        $taxesInformation->setAgenteDeRetencionIVA($agenteDeRetencionIVA);
+        $taxesInformation->setRegimenSimple($regimenSimple);
+        $taxesInformation->setImpuestoNacionalConsumo($impuestoNacionalConsumo);
+        $taxesInformation->setImpuestoSobreVentasIVA($impuestoSobreVentasIVA);
+        $taxesInformation->setCreatedDate($date);
+        $taxesInformation->setUpdatedDate($date);
+        return $taxesInformation;
+    }
+
+
+    public function updateTaxesInformation($taxesInformation,$customerTaxesInformation,$taxTypePerson){
+        $granContribuyente = $taxesInformation['granContribuyente'] ?? null;
+        $autorretenedor = $taxesInformation['autorretenedor'] ?? null;
+        $agenteRetencionIVA = $taxesInformation['agenteRetencionIVA'] ?? null;
+        $regimenSimpleTributacion = $taxesInformation['regimenSimpleTributacion'] ?? null;
+        $impuestoNacionalConsumo = $taxesInformation['impuestoNacionalConsumo'] ?? null;
+        $impuestoSobreVentas = $taxesInformation['impuestoSobreVentas'] ?? null;
+        $dvNit = $taxesInformation['dvNit'] ?? null;
+        $date = new \DateTime();
+        $taxesInformation = new TaxesInformation();
+        $customerTaxesInformation->setTaxesTypePerson($taxTypePerson);
+        $customerTaxesInformation->setDvNit($dvNit);
+        $customerTaxesInformation->setGranContribuyente($granContribuyente);
+        $customerTaxesInformation->setAutorretenedor($autorretenedor);
+        $customerTaxesInformation->setAgenteDeRetencionIVA($agenteDeRetencionIVA);
+        $customerTaxesInformation->setRegimenSimple($regimenSimple);
+        $customerTaxesInformation->setImpuestoNacionalConsumo($impuestoNacionalConsumo);
+        $customerTaxesInformation->setImpuestoSobreVentasIVA($impuestoSobreVentasIVA);
+        $customerTaxesInformation->setUpdatedDate($date);
+        return $customerTaxesInformation;
     }
 
 //    /**

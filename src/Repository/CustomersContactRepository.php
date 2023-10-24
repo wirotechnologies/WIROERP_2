@@ -41,10 +41,33 @@ class CustomersContactRepository extends ServiceEntityRepository
 
     public function create($customer, $contact,$status): ?CustomersContact
     {
+        $date = new \DateTime();
         $customerContact = new CustomersContact();
         $customerContact->setCustomers($customer);
         $customerContact->setContacts($contact);
         $customerContact->setStatus($status);
+        $customerContact->setCreatedDate($date);
+        $customerContact->setUpdatedDate($date);
+        return $customerContact;
+    }
+
+    public function createCustomerContact($contact,$customer,$status): ?CustomersContact
+    {
+        $date = new \DateTime();
+        $customerContact = new CustomersContact();
+        $customerContact->setCustomers($customer);
+        $customerContact->setContacts($contact);
+        $customerContact->setStatus($status);
+        $customerContact->setCreatedDate($date);
+        $customerContact->setUpdatedDate($date);
+        return $customerContact;
+    }
+
+    public function updateStatus($customerContact,$status)
+    {   
+        $date = new \DateTime();
+        $customerContact->setStatus($status);
+        $customerContact->setUpdatedDate($date);
         return $customerContact;
     }
 

@@ -253,8 +253,6 @@ class CustomersController extends AbstractController
         $response->setStatusCode(201); 
         $response->setContent(json_encode(['createdCustomer' => $idCustomer])) ;
         return $response;
-        
-
     }
 }      
     

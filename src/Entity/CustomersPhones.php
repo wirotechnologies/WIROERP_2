@@ -41,7 +41,8 @@ class CustomersPhones
     private ?\DateTimeInterface $createdDate = null;
 
 
-    
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedDate ;
 
     // public function getCustomers(): ?Customers
     // {
@@ -123,6 +124,26 @@ class CustomersPhones
     public function setCreatedDate(?\DateTimeInterface $createdDate): self
     {
         $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of updatedDate
+     */ 
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * Set the value of updatedDate
+     *
+     * @return  self
+     */ 
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
 
         return $this;
     }

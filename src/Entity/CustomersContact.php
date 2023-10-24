@@ -38,6 +38,11 @@ class CustomersContact
     #[ORM\JoinColumn(name:"status_id", referencedColumnName:"id")]
     private ?Status $status;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdDate;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedDate;
 
     public function getId(): ?int
     {
@@ -84,6 +89,46 @@ class CustomersContact
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of createdDate
+     */ 
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * Set the value of createdDate
+     *
+     * @return  self
+     */ 
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of updatedDate
+     */ 
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * Set the value of updatedDate
+     *
+     * @return  self
+     */ 
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
 
         return $this;
     }

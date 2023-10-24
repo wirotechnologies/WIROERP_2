@@ -64,7 +64,10 @@ class CustomersAddresses
     private ?string $note;
     
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $createdDate ;
+    private ?\DateTimeInterface $createdDate;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedDate ;
 
     public function getId(): ?int
     {
@@ -216,6 +219,26 @@ class CustomersAddresses
     public function setCustomers(?Customers $customers): self
     {
         $this->customers = $customers;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of updatedDate
+     */ 
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * Set the value of updatedDate
+     *
+     * @return  self
+     */ 
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
 
         return $this;
     }

@@ -83,51 +83,12 @@ class CustomersRepository extends ServiceEntityRepository
 
     public function update($customer, $dataJson): ?Customers
     {
-        $custType = $customer->getCustomerTypes();
-        $email = $dataJson['email'] ?? throw new BadRequestHttpException('400', null, 400);
-        
-        if (!is_null($email)){   
+        $email = $dataJson['email'] ?? null;
+        $date = new \DateTime();
+        if($email){
             $customer->setEmail($email);
-            $date = new \DateTime();
-            $customer->setUpdatedDate($date);  
-        }
-
-        if($custType->getId() == 2 ){
-            $commercialName = $dataJson['commercialName'] ?? throw new BadRequestHttpException('400', null, 400);
-            if (!is_null($commercialName)){
-                $customer->setCommercialName($commercialName);
-                $date = new \DateTime();
-                $customer->setUpdatedDate($date);
-            }
-        }
-
-        else{
-            $firstName = $dataJson['firstName'] ?? throw new BadRequestHttpException('400', null, 400);
-            $middleName = isset($dataJson['middleName']) ? $dataJson['middleName']:Null;
-            $lastName = $dataJson['lastName'] ?? throw new BadRequestHttpException('400', null, 400);
-            $secondLastName = isset($dataJson['secondLastName']) ? $dataJson['secondLastName']:Null;
-
-            if (!is_null($firstName)){
-                $customer->setFirstName($firstName);
-                $date = new \DateTime();
-                $customer->setUpdatedDate($date);
-            }
-            if (!is_null($middleName)){
-                $customer->setMiddleName($middleName);
-                $date = new \DateTime();
-                $customer->setUpdatedDate($date);
-            } 
-            if (!is_null($lastName)){
-                $customer->setLastName($lastName);
-                $date = new \DateTime();
-                $customer->setUpdatedDate($date);
-            }
-            if (!is_null($secondLastName)){
-                $customer->setSecondLastName($secondLastName);
-                $date = new \DateTime();
-                $customer->setUpdatedDate($date);
-            }
-        }    
+            $customer->setUpdatedDate($date);
+        }  
         return $customer;
     }
 

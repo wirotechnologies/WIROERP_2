@@ -67,6 +67,27 @@ class ContactsRepository extends ServiceEntityRepository
         return $contact; 
     }
 
+    public function createContact($mainContact,$identifierType)
+    {
+        $date = new \DateTime();
+        $contactId = $mainContact['contactId'] ?? null;
+        $firstName = $mainContact['firstName'] ?? null;
+        $middleName = $mainContact['middleName'] ?? null;
+        $lastName = $mainContact['lastName'] ?? null;
+        $secondLastName = $mainContact['secondLastName'] ?? null;
+        $email = $mainContact['email'] ?? null;
+        $contact = new Contacts();
+        $contact->setPrimaryKeys($contactId,$identifierType);
+        $contact->setFirstName($firstName);
+        $contact->setMiddleName($middleName);
+        $contact->setLastName($lastName);
+        $contact->setSecondLastName($secondLastName);
+        $contact->setEmail($email);
+        $contact->setUpdatedDate($date);
+        $contact->setCreatedDate($date);
+        return $contact;
+    }
+
     public function update($dataJson, $contact): ?Contacts
     {
         $mainContact = $dataJson['mainContact'];

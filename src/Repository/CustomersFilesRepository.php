@@ -48,6 +48,14 @@ class CustomersFilesRepository extends ServiceEntityRepository
         return $uploadedFile;
     }
 
+    public function updateStatus($customerFile,$status)
+    {   
+        $date = new \DateTime();
+        $customerFile->setStatus($status);
+        $customerFile->setUpdatedDate($date);
+        return $customerFile;
+    }
+
 //    /**
 //     * @return CustomersFiles[] Returns an array of CustomersFiles objects
 //     */

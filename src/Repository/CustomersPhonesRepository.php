@@ -39,7 +39,7 @@ class CustomersPhonesRepository extends ServiceEntityRepository
         }
     }
 
-    public function create($number, $customer,$status) :?CustomersPhones
+    public function create($number,$customer,$status) :?CustomersPhones
     {
         $customerPhone = new CustomersPhones();
         $date = new \DateTime();
@@ -47,6 +47,14 @@ class CustomersPhonesRepository extends ServiceEntityRepository
         $customerPhone->setCustomers($customer);
         $customerPhone->setStatus($status);
         $customerPhone->setCreatedDate($date);
+        return $customerPhone;
+    }
+
+    public function updateStatus($customerPhone,$status)
+    {   
+        $date = new \DateTime();
+        $customerPhone->setStatus($status);
+        $customerPhone->setUpdatedDate($date);
         return $customerPhone;
     }
 

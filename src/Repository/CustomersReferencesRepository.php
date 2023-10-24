@@ -61,6 +61,34 @@ class CustomersReferencesRepository extends ServiceEntityRepository
         
     }
 
+    public function createCustomerReference($reference,$customer,$countryPhoneCode,$status) : ?CustomersReferences
+    {
+        $fullName = $reference['fullName'];
+        $phoneNumber = $reference['phoneNumber'];
+        $typeReference = $reference['typeReference'];
+        
+        $customerReference = new CustomersReferences();
+        $date = new \DateTime();
+        $customerReference->setCustomers($customer);
+        $customerReference->setTypeReference($typeReference);
+        $customerReference->setFullName($fullName);
+        $customerReference->setPhoneNumber($phoneNumber);
+        $customerReference->setReferencesCountriesPhoneCode($countryPhoneCode);
+        $customerReference->setStatus($status);
+        $customerReference->setCreatedDate($date);
+        $customerReference->setUpdatedDate($date);
+        
+        return $customerReference;    
+    }
+
+    public function updateStatus($customerReference,$status)
+    {   
+        $date = new \DateTime();
+        $customerReference->setStatus($status);
+        $customerReference->setUpdatedDate($date);
+        return $customerReference;
+    }
+
     /**
     * @return CustomersAddresses[] Returns an array of CustomersPhones objects
     */

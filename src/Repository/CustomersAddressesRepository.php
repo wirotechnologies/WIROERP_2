@@ -64,6 +64,39 @@ class CustomersAddressesRepository extends ServiceEntityRepository
         return $customerAddress;
     }
 
+    public function createCustomerAddress($address,$customer,$city,$status): ?CustomersAddresses
+    {
+        $line1 = $address['line1'] ?? null;
+        $line2 = $address['line2'] ?? null;
+        $note = $address['note'] ?? null;
+        $zipcode = $address['zipcode'] ?? null;
+        $socioeconomicStatus = $address['socioeconomicStatus'] ?? null;
+
+        $customerAddress = new CustomersAddresses();
+        $date = new \DateTime();
+        $customerAddress->setCustomers($customer);
+        $customerAddress->setStatus($status);
+        $customerAddress->setCities($city);
+        $customerAddress->setLine1($line1);
+        $customerAddress->setLine2($line2);
+        $customerAddress->setNote($note);
+        $customerAddress->setZipcode($zipcode);
+        $customerAddress->setSocioeconomicStatus($socioeconomicStatus);
+        $customerAddress->setCreatedDate($date);
+        $customerAddress->setUpdatedDate($date);
+        return $customerAddress;
+
+
+    }
+
+    public function updateStatus($customerAddress,$status)
+    {
+        $date = new \DateTime();
+        $customerAddress->setStatus($status);
+        $customerAddress->setUpdatedDate($date);
+        return $customerAddress;
+    }
+
     public function update($dataJson, $customerAddress): ?CustomersAddresses
     {
         $address = $dataJson['address'];

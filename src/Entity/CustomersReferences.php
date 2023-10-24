@@ -59,6 +59,9 @@ class CustomersReferences
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedDate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -168,6 +171,26 @@ class CustomersReferences
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of updatedDate
+     */ 
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * Set the value of updatedDate
+     *
+     * @return  self
+     */ 
+    public function setUpdatedDate($updatedDate)
+    {
+        $this->updatedDate = $updatedDate;
 
         return $this;
     }
